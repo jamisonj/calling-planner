@@ -1,13 +1,3 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
@@ -45,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .drawer-list a {
-        display: block;
+        display: inline-block;
         padding: 0 16px;
         text-decoration: none;
         color: var(--app-secondary-color);
@@ -68,12 +58,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer id="drawer">
-        <app-toolbar>Menu</app-toolbar>
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/view1">View One</a>
-          <a name="view2" href="/view2">View Two</a>
-          <a name="view3" href="/view3">View Three</a>
-        </iron-selector>
+        <app-toolbar>Ward List</app-toolbar>
+        <ul class="simple-list">
+          <li><span class="handle">::</span>Gary LeeMaster</li>
+          <li><span class="handle">::</span>Evan McMullin</li>
+          <li><span class="handle">::</span>Rand Paul</li>
+        </ul>
       </app-drawer>
 
       <!-- Main content -->
@@ -84,6 +74,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-icon-button icon="calling-planner-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Calling Planner</div>
           </app-toolbar>
+          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+            <a name="brainstorm" href="/brainstorm">Brainstorm Zone</a>
+            <a name="staging" href="/staging">Staging Zone</a>
+            <a name="final" href="/final">Final Plan</a>
+          </iron-selector>
         </app-header>
 
         <iron-pages
@@ -91,14 +86,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <calling-planner-view1 name="view1"></calling-planner-view1>
-          <calling-planner-view2 name="view2"></calling-planner-view2>
-          <calling-planner-view3 name="view3"></calling-planner-view3>
+          <calling-planner-brainstorm name="brainstorm"></calling-planner-brainstorm>
+          <calling-planner-staging name="staging"></calling-planner-staging>
+          <calling-planner-final name="final"></calling-planner-final>
           <calling-planner-view404 name="view404"></calling-planner-view404>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
   </template>
+
+  <script src="../bower_components/Sortable/Sortable.js"></script>
 
   <script>
     Polymer({
@@ -116,8 +113,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routePageChanged(routeData.page)',
       ],
 
+      ready: function () {
+        var element = Polymer.dom(this.root).querySelector('.simple-list');
+        Sortable.create(element, {handle: ".handle", group: {name: "brainstorm", pull: "clone", put: false}});
+      },
+
       _routePageChanged: function(page) {
-        this.page = page || 'view1';
+        this.page = page || 'brainstorm';
 
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();
@@ -135,4 +137,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
     });
   </script>
+
+
 </dom-module>
