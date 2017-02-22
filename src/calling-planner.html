@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="calling-planner-icons.html">
+<link rel="import" href="../bower_components/polymer-sortablejs/polymer-sortablejs.html"/>
 
 <dom-module id="calling-planner">
   <template>
@@ -59,11 +60,18 @@
       <!-- Drawer content -->
       <app-drawer id="drawer">
         <app-toolbar>Ward List</app-toolbar>
-        <ul class="simple-list">
+        <ul>
+          <sortable-js group="brainstorm">
+            <template is="dom-repeat" items={{items}}>
+              <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
+            </template>
+          </sortable-js>
+        </ul>
+<!--         <ul class="simple-list">
           <li><span class="handle">::</span>Gary LeeMaster</li>
           <li><span class="handle">::</span>Evan McMullin</li>
           <li><span class="handle">::</span>Rand Paul</li>
-        </ul>
+        </ul> -->
       </app-drawer>
 
       <!-- Main content -->
@@ -107,16 +115,23 @@
           reflectToAttribute: true,
           observer: '_pageChanged',
         },
+
+        items: {
+          type: Array,
+          value: ["Rand Paul", "John Roberts", "Ron Wyden"],
+          notify: true
+          // reflectToAttribute: true
+        }
       },
 
       observers: [
         '_routePageChanged(routeData.page)',
       ],
 
-      ready: function () {
-        var element = Polymer.dom(this.root).querySelector('.simple-list');
-        Sortable.create(element, {handle: ".handle", group: {name: "brainstorm", pull: "clone", put: false}});
-      },
+      // ready: function () {
+      //   var element = Polymer.dom(this.root).querySelector('.simple-list');
+      //   Sortable.create(element, {handle: ".handle", group: {name: "brainstorm", pull: "clone", put: false}});
+      // },
 
       _routePageChanged: function(page) {
         this.page = page || 'brainstorm';
