@@ -125,11 +125,8 @@
       },
 
       filter: document.addEventListener("filter", function (evt) {
-        console.log(evt);
         var item = evt.item;
-        var ctrl = evt.target;
-        console.log(typeof(evt.to));
-        if (typeof(item === "object")) { //TODO: Figure this out.
+        if (typeof item !== "undefined") {
           item.parentNode.removeChild(item);
         }
         
