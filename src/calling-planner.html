@@ -61,7 +61,7 @@
       <app-drawer id="drawer">
         <app-toolbar>Ward List</app-toolbar>
         <ul>
-          <sortable-js group="brainstorm">
+          <sortable-js group='brainstorm' filter='.remove'>
             <template is="dom-repeat" items={{items}}>
               <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
             </template>
@@ -119,10 +119,21 @@
         items: {
           type: Array,
           value: ["Rand Paul", "John Roberts", "Ron Wyden"],
-          notify: true
-          // reflectToAttribute: true
+          notify: true,
+          reflectToAttribute: true
         }
       },
+
+      filter: document.addEventListener("filter", function (evt) {
+        console.log(evt);
+        var item = evt.item;
+        var ctrl = evt.target;
+        console.log(typeof(evt.to));
+        if (typeof(item === "object")) { //TODO: Figure this out.
+          item.parentNode.removeChild(item);
+        }
+        
+      }),
 
       observers: [
         '_routePageChanged(routeData.page)',
