@@ -14,38 +14,42 @@
         cursor: move;
         cursor: -webkit-grabbing;
       }
+      
+      sortable-js {
+        background-color: red;
+        min-height: 100px;
+      }
     </style>
 
     <div id="org" class="card">
       <div class="circle">1</div>
       <h1>Bishopric</h1>
       <h2>Bishop</h2>
-<!--         <ul class="simple-list">
-          <li><span class="handle">::</span> Gary LeeMaster <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Evan McMullin <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Rand Paul <span class="remove">X</span></li>
-        </ul> -->
-        <sortable-js group="brainstorm">
-          <template is="dom-repeat" items={{bishop_items}}>
-            <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
-          </template>
+      <!-- <div class="sortable-ghost"> -->
+        <sortable-js class="sortable-ghost" group="brainstorm" filter=".remove" ghost-class=".sortable-ghost">
+          
+            <template is="dom-repeat" items={{bishop_items}}>
+              <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
+            </template>
+          
         </sortable-js>
+        <!-- </div> -->
+      
       <h2>First Counselor</h2>
-        <sortable-js group="brainstorm">
-          <template is="dom-repeat" items={{fc_items}}>
-            <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
-          </template>
+        <sortable-js group="brainstorm" filter=".remove">
+          <!-- <div class="name-list"> -->
+            <template is="dom-repeat" items={{fc_items}}>
+              <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
+            </template>
+          <!-- </div> -->
         </sortable-js>
-<!--         <ul class="simple-list">       
-          <li><span class="handle">::</span> Gary LeeMaster <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Evan McMullin <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Rand Paul <span class="remove">X</span></li>
-        </ul> -->
       <h2>Second Counselor</h2>
-        <sortable-js group="brainstorm">
-          <template is="dom-repeat" items={{sc_items}}>
-            <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
-          </template>
+        <sortable-js group="brainstorm" filter=".remove">
+          <!-- <div class="name-list"> -->
+            <template is="dom-repeat" items={{sc_items}}>
+              <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
+            </template>
+          <!-- </div> -->
         </sortable-js>
     </div>
     

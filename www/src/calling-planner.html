@@ -126,6 +126,7 @@
 
       filter: document.addEventListener("filter", function (evt) {
         var item = evt.item;
+        console.log(item);
         if (typeof item !== "undefined") {
           item.parentNode.removeChild(item);
         }
