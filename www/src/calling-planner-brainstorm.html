@@ -29,7 +29,7 @@
         <sortable-js class="sortable-ghost" group="brainstorm" filter=".remove" ghost-class=".sortable-ghost">
           
             <template is="dom-repeat" items={{bishop_items}}>
-              <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
+              <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
             </template>
           
         </sortable-js>
@@ -87,7 +87,7 @@
       properties: {
         bishop_items: {
           type: Array,
-          value: ["Bernie Sanders", "Donald Trump", "Neil Gorsuch"],
+          value: [{"name": "Bernie Sanders"}, {"name": "Donald Trump"}, {"name": "Neil Gorsuch"}],
           notify: true,
           reflectToAttribute: true
         },
