@@ -47,6 +47,11 @@
         color: black;
         font-weight: bold;
       }
+
+      sortable-js {
+        background-color: red;
+        min-height: 100px;
+      }
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -63,7 +68,7 @@
         <ul>
           <sortable-js group='brainstorm' filter='.remove'>
             <template is="dom-repeat" items={{items}}>
-              <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
+              <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
             </template>
           </sortable-js>
         </ul>
@@ -118,7 +123,7 @@
 
         items: {
           type: Array,
-          value: ["Rand Paul", "John Roberts", "Ron Wyden"],
+          value: [{"name": "Bernie Sanders"}, {"name": "Donald Trump"}, {"name": "Neil Gorsuch"}],
           notify: true,
           reflectToAttribute: true
         }

@@ -26,7 +26,7 @@
       <h1>Bishopric</h1>
       <h2>Bishop</h2>
       <!-- <div class="sortable-ghost"> -->
-        <sortable-js class="sortable-ghost" group="brainstorm" filter=".remove" ghost-class=".sortable-ghost">
+        <sortable-js class="sortable-ghost" group="brainstorm" filter=".remove" ghost-class=".sortable-ghost" drag-over-bubble="true">
           
             <template is="dom-repeat" items={{bishop_items}}>
               <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
@@ -39,7 +39,7 @@
         <sortable-js group="brainstorm" filter=".remove">
           <!-- <div class="name-list"> -->
             <template is="dom-repeat" items={{fc_items}}>
-              <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
+              <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
             </template>
           <!-- </div> -->
         </sortable-js>
@@ -47,8 +47,11 @@
         <sortable-js group="brainstorm" filter=".remove">
           <!-- <div class="name-list"> -->
             <template is="dom-repeat" items={{sc_items}}>
-              <div><span class="handle">::</span> {{item}} <span class="remove">X</span></div>
+              <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
             </template>
+
+            <div style="min-height: 50px; background-color: red;"></div>
+
           <!-- </div> -->
         </sortable-js>
     </div>
@@ -93,13 +96,13 @@
         },
         fc_items: {
           type: Array,
-          value: ["Mark Zuckerberg", "Elon Musk", "John Rockefeller"],
+          value: [{"name": "Mark Zuckerberg"}, {"name": "Elon Musk"}, {"name": "John Rockefeller"}],
           notify: true,
           reflectToAttribute: true
         },
         sc_items: {
           type: Array,
-          value: ["Mark Keith", "Gove Allen", "Tom Meservy"],
+          value: [{"name": "Mark Keith"}, {"name": "Gove Allen"}, {"name": "Tom Meservy"}],
           notify: true,
           reflectToAttribute: true
         }
