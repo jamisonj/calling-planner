@@ -10,14 +10,19 @@
         padding: 10px;
       }
 
-      .my-handle {
+/*      .handle {
         cursor: move;
         cursor: -webkit-grabbing;
+      }*/
+
+      .simple-list {
+        padding-left: 10px;
       }
-      
-      sortable-js {
-        background-color: red;
-        min-height: 100px;
+
+      .simple-list li {
+        cursor: move;
+        /*cursor: -webkit-grabbing;*/
+        list-style-type: none;
       }
     </style>
 
@@ -26,34 +31,46 @@
       <h1>Bishopric</h1>
       <h2>Bishop</h2>
       <!-- <div class="sortable-ghost"> -->
-        <sortable-js class="sortable-ghost" group="brainstorm" filter=".remove" ghost-class=".sortable-ghost" drag-over-bubble="true">
+        <!-- <sortable-js group='{ "name": "brainstorm", "pull": "true", "put": "true"}' filter=".remove">
           
             <template is="dom-repeat" items={{bishop_items}}>
               <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
             </template>
           
-        </sortable-js>
+        </sortable-js> -->
         <!-- </div> -->
+
+        <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
+          <li><span class="handle">::</span> Gary LeeMaster <span class="remove">X</span></li>
+          <li><span class="handle">::</span> Evan McMullin <span class="remove">X</span></li>
+          <li><span class="handle">::</span> Rand Paul <span class="remove">X</span></li>
+        </ul>
       
       <h2>First Counselor</h2>
-        <sortable-js group="brainstorm" filter=".remove">
-          <!-- <div class="name-list"> -->
+<!--         <sortable-js group='{ "name": "brainstorm", "pull": "true", "put": "true"}' filter=".remove">
             <template is="dom-repeat" items={{fc_items}}>
               <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
             </template>
-          <!-- </div> -->
-        </sortable-js>
+        </sortable-js> -->
+
+        <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
+          <li><span class="handle">::</span> Gary LeeMaster <span class="remove">X</span></li>
+          <li><span class="handle">::</span> Evan McMullin <span class="remove">X</span></li>
+          <li><span class="handle">::</span> Rand Paul <span class="remove">X</span></li>
+        </ul>
       <h2>Second Counselor</h2>
-        <sortable-js group="brainstorm" filter=".remove">
-          <!-- <div class="name-list"> -->
-            <template is="dom-repeat" items={{sc_items}}>
+<!--         <sortable-js group='{ "name": "brainstorm", "pull": "true", "put": "true"}' filter=".remove">
+            <template is="dom-repeat" items={{sc_items}} style="min-height: 50px; background-color: #fafafa;">
               <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
             </template>
+            <div style="min-height: 5px; background-color: #fafafa;"></div>
+        </sortable-js> -->
 
-            <div style="min-height: 50px; background-color: red;"></div>
-
-          <!-- </div> -->
-        </sortable-js>
+        <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
+          <li><span class="handle">::</span> Gary LeeMaster <span class="remove">X</span></li>
+          <li><span class="handle">::</span> Evan McMullin <span class="remove">X</span></li>
+          <li><span class="handle">::</span> Rand Paul <span class="remove">X</span></li>
+        </ul>
     </div>
     
   </template>
@@ -62,30 +79,26 @@
     Polymer({
       is: 'calling-planner-brainstorm',
 
-      // ready: function () {
+      ready: function () {
 
-      //   // var node = this.$$('.simple-list');
-      //   var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
-      //   console.log(elements);
+        // var node = this.$$('.simple-list');
+        var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
 
-      //   elements.forEach(function (element) {
-      //     Sortable.create(element, {
-      //       handle: ".handle", 
-      //       group: "brainstorm",
-      //       filter: ".remove",
-      //       onFilter: function (e) {
-      //         var item = e.item,
-      //         ctrl = e.target;
-      //         console.log(item);
-      //         console.log(ctrl);
-
-      //         console.log("This is working");
-      //         item.parentNode.removeChild(item); // remove sortable item
-      //       }
-      //     });
-      //     console.log("Created sortable");
-      //   });
-      // },
+        elements.forEach(function (element) {
+          Sortable.create(element, {
+            // handle: ".handle", 
+            group: "brainstorm",
+            filter: ".remove",
+            onFilter: function (e) {
+              var item = e.item;
+              console.log(item);
+              if (typeof item !== "undefined") {
+                item.parentNode.removeChild(item);
+              }
+            }
+          });
+        });
+      },
 
       properties: {
         bishop_items: {

@@ -48,9 +48,19 @@
         font-weight: bold;
       }
 
-      sortable-js {
-        background-color: red;
-        min-height: 100px;
+/*      .handle {
+        cursor: move;
+        cursor: -webkit-grabbing;
+      }*/
+
+      .simple-list {
+        padding-left: 10px;
+      }
+
+      .simple-list li {
+        cursor: move;
+        /*cursor: -webkit-grabbing;*/
+        list-style-type: none;
       }
     </style>
 
@@ -65,18 +75,21 @@
       <!-- Drawer content -->
       <app-drawer id="drawer">
         <app-toolbar>Ward List</app-toolbar>
-        <ul>
-          <sortable-js group='brainstorm' filter='.remove'>
+<!--         <ul>
+          <sortable-js group='{ "name": "brainstorm", "pull": "true", "put": "true" }' filter='.remove'>
             <template is="dom-repeat" items={{items}}>
               <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
             </template>
           </sortable-js>
-        </ul>
-<!--         <ul class="simple-list">
-          <li><span class="handle">::</span>Gary LeeMaster</li>
-          <li><span class="handle">::</span>Evan McMullin</li>
-          <li><span class="handle">::</span>Rand Paul</li>
         </ul> -->
+        <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
+          <template is="dom-repeat" items={{names}}>
+            <li><span class="handle">::</span> {{item.name}} <span class="remove">X</span></li>
+          </template>
+          <!-- <li><span class="handle">::</span>Gary LeeMaster <span class="filter">X</span></li>
+          <li><span class="handle">::</span>Evan McMullin <span class="filter">X</span></li>
+          <li><span class="handle">::</span>Rand Paul <span class="filter">X</span></li> -->
+        </ul>
       </app-drawer>
 
       <!-- Main content -->
@@ -121,7 +134,7 @@
           observer: '_pageChanged',
         },
 
-        items: {
+        names: { // This is where the entire ward list of names will go. Current names are placeholders.
           type: Array,
           value: [{"name": "Bernie Sanders"}, {"name": "Donald Trump"}, {"name": "Neil Gorsuch"}],
           notify: true,
@@ -129,23 +142,23 @@
         }
       },
 
-      filter: document.addEventListener("filter", function (evt) {
-        var item = evt.item;
-        console.log(item);
-        if (typeof item !== "undefined") {
-          item.parentNode.removeChild(item);
-        }
-        
-      }),
-
       observers: [
         '_routePageChanged(routeData.page)',
       ],
 
-      // ready: function () {
-      //   var element = Polymer.dom(this.root).querySelector('.simple-list');
-      //   Sortable.create(element, {handle: ".handle", group: {name: "brainstorm", pull: "clone", put: false}});
-      // },
+      ready: function () {
+        var element = Polymer.dom(this.root).querySelector('.simple-list');
+
+        Sortable.create(element, {
+          // handle: ".handle", 
+          group: {
+            name: "brainstorm", 
+            pull: "clone", 
+            put: false
+          },
+          sort: false
+        });
+      },
 
       _routePageChanged: function(page) {
         this.page = page || 'brainstorm';
