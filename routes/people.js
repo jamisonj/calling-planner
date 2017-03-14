@@ -4,6 +4,8 @@ var express = require('express');
 const people = require('../controllers/people');
 // const bodyParser = require('body-parser');
 
+// Only will run when api/people is called.
+
 const router = express.Router();
 
 router.post('/', function(req, res){
