@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<script src="../js/test_data.js"></script>
 
 <dom-module id="calling-planner-brainstorm">
   <template>
@@ -9,12 +10,40 @@
 
         padding: 10px;
       }
+      paper-card.rate { @apply(--layout-horizontal); }
+      .rate-image {
+        width: 200px;
+        height: 170px;
+        background: url('../images/donuts.jpg');
+        background-size: cover;
+      }
+      .rate-content {
+        @apply(--layout-flex);
+        float: left;
+      }
+      .rate-header { @apply(--paper-font-headline); }
+      .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+      paper-icon-button.rate-icon {
+        --iron-icon-fill-color: white;
+        --iron-icon-stroke-color: var(--paper-grey-600);
+      }
+      .org {
+        transition: box-shadow .5s;
+        width: 200px;
+        display: inline-block;
+        margin: 8px;
+        padding: 0px;
+      }
 
-/*      .handle {
-        cursor: move;
-        cursor: -webkit-grabbing;
-      }*/
-
+      .org:hover {
+        z-index:1000;
+        box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+        -webkit-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+        -moz-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+      }
+      .card_link {
+        text-decoration: none;
+      }
       .simple-list {
         padding-left: 10px;
       }
@@ -25,6 +54,18 @@
         list-style-type: none;
       }
     </style>
+
+    <div id="content">
+      <template is="dom-repeat" items="{{orgs}}">
+        <a href='/org/{{item.id}}' class="card_link">
+          <div class="card org">
+            <div class="rate-header">{{item.name}}</div>
+            <div class="rate-header">{{item.id}}</div>
+            <div class="rate-image"></div>
+          </div>
+        </a>
+      </template>
+      </div>
 
     <div id="org" class="card">
       <div class="circle">1</div>
@@ -118,9 +159,30 @@
           value: [{"name": "Mark Keith"}, {"name": "Gove Allen"}, {"name": "Tom Meservy"}],
           notify: true,
           reflectToAttribute: true
+        },
+        orgs: {
+          type: Array,
+          value: getOrganizations(window.json),
+          notify: true,
+          reflectToAttribute: true
         }
       }
 
     });
+
+    function getOrganizations (json) {
+      const orgs = json.callings;
+      let orgs_dict = [];
+      for (let i = 0; i < orgs.length; i++) {
+        // const org_info = {}
+        // org_info.name = orgs[i].name;
+        // org_info.id = i;
+        // orgs_dict.push(org_info);
+        // console.log(orgs[i]);
+        // window[i] = orgs[i];
+        json.callings[i].id = i;
+      }
+      return json.callings;
+    }
   </script>
 </dom-module>
