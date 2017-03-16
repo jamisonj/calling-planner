@@ -38,17 +38,8 @@ app.use('/api', bodyParser.json());
 // app.use('/api/tasks', taskRoute);
 // app.use('/api/people', peopleRoutes);
 
-app.get('/', function(req, res) {
-	if (req.user) return res.send('Hello, ' + req.user.username);
-    res.send('Hello, Stranger!');
-	console.log(req.path);
-	// let fullPath = path.resolve(__dirname, 'www/index.html');
-	// console.log(fullPath);
-	res.sendFile('www/index.html', {root: '.'}); // Send the index file if not in api subdirectory.
-});
-
 // specify a URL that only authenticated users can hit
-app.get('/protected',
+app.get('/api/protected',
     function(req, res) {
         if (!req.user) return res.sendStatus(401);
         res.send('You have access.');
@@ -56,16 +47,25 @@ app.get('/protected',
 );
 
 // specify the login url
-app.put('/auth',
+app.put('/api/auth',
     passport.authenticate('local'),
     function(req, res) {
         res.send('You are authenticated, ' + req.user.username);
     });
 
 // log the user out
-app.delete('/auth', function(req, res) {
+app.delete('/api/auth', function(req, res) {
     req.logout();
     res.send('You have logged out.');
+});
+
+app.get('*', function(req, res) {
+	if (req.user) return res.send('Hello, ' + req.user.username);
+    res.send('Hello, Stranger!');
+	console.log(req.path);
+	// let fullPath = path.resolve(__dirname, 'www/index.html');
+	// console.log(fullPath);
+	res.sendFile('www/index.html', {root: '.'}); // Send the index file if not in api subdirectory.
 });
 
 app.listen(3000, function () {
