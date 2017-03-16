@@ -1,11 +1,13 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
+  "shell": "src/calling-planner.html",
   "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
+    "src/calling-planner-login.html",
+    "src/calling-planner.html",
+    "src/calling-planner-brainstorm.html",
+    "src/calling-planner-staging.html",
+    "src/calling-planner-final.html",
+    "src/calling-planner-view404.html"
   ],
   "sourceGlobs": [
     "src/**/*",

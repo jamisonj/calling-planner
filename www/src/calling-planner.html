@@ -74,20 +74,10 @@
       <!-- Drawer content -->
       <app-drawer id="drawer">
         <app-toolbar>Ward List</app-toolbar>
-<!--         <ul>
-          <sortable-js group='{ "name": "brainstorm", "pull": "true", "put": "true" }' filter='.remove'>
-            <template is="dom-repeat" items={{items}}>
-              <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
-            </template>
-          </sortable-js>
-        </ul> -->
         <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
           <template is="dom-repeat" items={{names}}>
             <li><span class="handle">::</span> {{item.name}} <span class="remove">X</span></li>
           </template>
-          <!-- <li><span class="handle">::</span>Gary LeeMaster <span class="filter">X</span></li>
-          <li><span class="handle">::</span>Evan McMullin <span class="filter">X</span></li>
-          <li><span class="handle">::</span>Rand Paul <span class="filter">X</span></li> -->
         </ul>
       </app-drawer>
 
@@ -98,6 +88,7 @@
           <app-toolbar>
             <paper-icon-button icon="calling-planner-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Calling Planner</div>
+            <a name="login" href="/login">Login</a>
           </app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
             <a name="brainstorm" href="/brainstorm">Brainstorm Zone</a>
@@ -114,6 +105,7 @@
           <calling-planner-brainstorm name="brainstorm"></calling-planner-brainstorm>
           <calling-planner-staging name="staging"></calling-planner-staging>
           <calling-planner-final name="final"></calling-planner-final>
+          <calling-planner-login name="login"></calling-planner-login>
           <calling-planner-view404 name="view404"></calling-planner-view404>
         </iron-pages>
       </app-header-layout>
@@ -160,7 +152,7 @@
       },
 
       _routePageChanged: function(page) {
-        this.page = page || 'brainstorm';
+        this.page = page || 'login';
 
         if (!this.$.drawer.persistent) {
           this.$.drawer.close();

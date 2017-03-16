@@ -1,0 +1,73 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="calling-planner-login">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      .wrapper-btns {
+        margin-top: 15px;
+      }
+
+      paper-button.link {
+        color: #757575;
+      }
+
+    </style>
+
+    <iron-ajax
+      id="registerLoginAjax"
+      method="post"
+      content-type="application/json"
+      handle-as="text"
+      on-response="handleUserResponse"
+      on-error="handleUserError">
+    </iron-ajax>
+
+    <div class="card">
+        <div id="unauthenticated">
+            <h1>Log In</h1>
+
+            <p><strong>Log in</strong> or <strong>sign up</strong>!</p>
+            
+            <paper-input-container>
+                <label>Username</label>
+                <input is="iron-input" id="username" type="text" bind-value="{{formData.username}}">
+            </paper-input-container>
+
+            <paper-input-container>
+                <label>Password</label>
+                <input is="iron-input" id="password" type="password" bind-value="{{formData.password}}">
+            </paper-input-container>
+
+            <div class="wrapper-btns">
+                <paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
+                <paper-button class="link" on-tap="postRegister">Sign Up</paper-button>
+            </div>
+        </div>    
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'calling-planner-login',
+      properties: {
+        formData: {
+            type: Object,
+            value: {}
+        }
+      }
+    });
+  </script>
+</dom-module>
