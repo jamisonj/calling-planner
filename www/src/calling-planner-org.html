@@ -102,14 +102,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
         for(let j = 0; j < org[i].assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
           // console.log(org[i].assignmentsInGroup[j])
-          if(!category.callingsInGroup) {
-            category.callingsInGroup = [] //initialize or append to array of calling objects
+          if(!org[i].callingsInGroup) {
+            org[i].callingsInGroup = [] //initialize or append to array of calling objects
+            // category.callingsInGroup = []
             callingsInGroupIndex = -1;
           }
           // console.log('initialzed array', org[i].callingsInGroup)
           if(org[i].assignmentsInGroup[j].positionTypeId === callingId) { //if like the one before
-            // console.log(callingsInGroupIndex)
-            category.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
+            try {
+              org[i].callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
+            } catch(e) {
+              callingId = org[i].assignmentsInGroup[j].positionTypeId;
+              let calling = {};
+              calling['callingTitle'] = org[i].assignmentsInGroup[j].positionName;
+              calling['callingMembers'] = [];
+              calling['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
+              org[i].callingsInGroup.push(calling)   //add calling object to array
+              callingsInGroupIndex++;
+            }
           }
           else {
             callingId = org[i].assignmentsInGroup[j].positionTypeId;
@@ -117,7 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             calling['callingTitle'] = org[i].assignmentsInGroup[j].positionName;
             calling['callingMembers'] = [];
             calling['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
-            category.callingsInGroup.push(calling)   //add calling object to array
+            org[i].callingsInGroup.push(calling)   //add calling object to array
             callingsInGroupIndex++;
           }
           // console.log(org[i].callingsInGroup)
