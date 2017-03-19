@@ -1,0 +1,130 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<script src="../js/test_data.js"></script>
+
+<dom-module id="calling-planner-org">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 
+        10px;
+      }
+      paper-card.rate { @apply(--layout-horizontal); }
+      .rate-image {
+        width: 200px;
+        height: 170px;
+        background: url('./donuts.jpg');
+        background-size: cover;
+      }
+      .rate-content {
+        @apply(--layout-flex);
+        float: left;
+      }
+      .rate-header { @apply(--paper-font-headline); }
+      .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+      paper-icon-button.rate-icon {
+        --iron-icon-fill-color: white;
+        --iron-icon-stroke-color: var(--paper-grey-600);
+      }
+      .org {
+        transition: box-shadow .5s;
+        width: 200px;
+        display: inline-block;
+        margin: 8px;
+        padding: 0px;
+      }
+
+      .org:hover {
+        z-index:1000;
+        box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+        -webkit-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+        -moz-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+      }
+      .card_link {
+        text-decoration: none;
+      }
+    </style>
+
+    <div id="content">
+      <template is="dom-repeat" items="{{groups}}">
+        <div>
+          <h1>{{item.name}}</h1>
+          <template is="dom-repeat" items="{{item.assignmentsInGroup}}" as="assignment" index-as="assignement_number">
+            <div id="org" class="card">
+              <h2>{{assignment.positionName}}</h2>
+                <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
+                  <li>{{assignment.person}}</li>
+                </ul>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    
+  </template>
+
+  <script>
+    Polymer({
+      is: 'calling-planner-org',
+      properties: {
+        groups: {
+          type: Array,
+          value: getOrganization(window.json.callings),
+          notify: true,
+          reflectToAttribute: true
+        }
+      },
+      created: function() {
+        console.log(getOrganization(window.json.callings));
+        // window.location.reload(true)
+      }
+    });
+
+    function getOrganization(json) {
+      let callingId = null;
+      let callingsInGroupIndex = -1;
+      const orgId = window.location.pathname.split('/')[2];
+      let org = json[orgId].children;
+      let category = json[orgId];
+      for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
+        for(let j = 0; j < org[i].assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
+          // console.log(org[i].assignmentsInGroup[j])
+          if(!category.callingsInGroup) {
+            category.callingsInGroup = [] //initialize or append to array of calling objects
+            callingsInGroupIndex = -1;
+          }
+          // console.log('initialzed array', org[i].callingsInGroup)
+          if(org[i].assignmentsInGroup[j].positionTypeId === callingId) { //if like the one before
+            // console.log(callingsInGroupIndex)
+            category.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
+          }
+          else {
+            callingId = org[i].assignmentsInGroup[j].positionTypeId;
+            let calling = {};
+            calling['callingTitle'] = org[i].assignmentsInGroup[j].positionName;
+            calling['callingMembers'] = [];
+            calling['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
+            category.callingsInGroup.push(calling)   //add calling object to array
+            callingsInGroupIndex++;
+          }
+          // console.log(org[i].callingsInGroup)
+          org[i].assignmentsInGroup[j].person = window.people[org[i].assignmentsInGroup[j].individualId].preferredName;
+        }
+      }
+      return org;
+    }
+  </script>
+</dom-module>
