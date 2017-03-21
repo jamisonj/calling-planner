@@ -50,8 +50,9 @@ app.get('/api/protected',
 app.put('/api/auth',
     passport.authenticate('local'),
     function(req, res) {
-        res.send('You are authenticated, ' + req.user.username);
-    });
+        console.log(req.user);
+        res.send(req.user.username);
+});
 
 // log the user out
 app.delete('/api/auth', function(req, res) {

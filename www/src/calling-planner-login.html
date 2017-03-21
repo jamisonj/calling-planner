@@ -23,11 +23,20 @@
         color: #757575;
       }
 
+      .alert-error {
+        background: #ffcdd2;
+        border: 1px solid #f44336;
+        border-radius: 3px;
+        color: #333;
+        font-size: 14px;
+        padding: 10px;
+      }
+
     </style>
 
     <iron-ajax
       id="registerLoginAjax"
-      method="post"
+      method="put"
       content-type="application/json"
       handle-as="text"
       on-response="handleUserResponse"
@@ -35,10 +44,14 @@
     </iron-ajax>
 
     <div class="card">
-        <div id="unauthenticated">
+        <div id="unauthenticated" hidden$="[[storedUser.loggedin]]">
             <h1>Log In</h1>
 
             <p><strong>Log in</strong> or <strong>sign up</strong>!</p>
+
+            <template is="dom-if" if="[[error]]">
+              <p class="alert-error"><strong>Error:</strong> [[error]]</p>
+            </template>
             
             <paper-input-container>
                 <label>Username</label>
@@ -54,6 +67,12 @@
                 <paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
                 <paper-button class="link" on-tap="postRegister">Sign Up</paper-button>
             </div>
+        </div>
+
+        <div id="authenticated" hidden$="[[!storedUser.loggedin]]">
+            <h2>Hello, [[storedUser.name]]!</h2>
+            <p>You are currently logged in.</p>
+            <paper-button raised class="primary" on-tap="postLogout">Log out</paper-button>
         </div>    
     </div>
 
@@ -66,8 +85,50 @@
         formData: {
             type: Object,
             value: {}
-        }
+        },
+        storedUser: Object,
+        error: String
+      },
+
+      _setReqBody: function() {
+          this.$.registerLoginAjax.body = this.formData;
+      },  
+
+      postLogin: function() {
+          this.$.registerLoginAjax.url = 'http://localhost:3000/api/auth';
+          this._setReqBody();
+          this.$.registerLoginAjax.generateRequest();
+      },
+
+      postRegister: function() {
+          // this.$.registerLoginAjax.url = '';
+          // this._setReqBody();
+          // this.$.registerLoginAjax.generateRequest();
+          console.log("postRegister");
+      },
+
+      handleUserResponse: function(event) {
+      var response = event.detail.response;
+
+      console.log(response);
+
+      if (response) {
+          console.log("Response: " + response);
+          this.error = '';
+          this.storedUser = {
+              name: this.formData.username,
+              loggedin: true
+          };
       }
+
+      // reset form data
+      this.formData = {};
+      },
+
+      handleUserError: function(event) {
+          this.error = event.detail.request.xhr.response;
+      }
+
     });
   </script>
 </dom-module>
