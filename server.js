@@ -12,7 +12,7 @@ const app = express();
 
 // tell passport to use a local strategy and tell it how to validate a username and password
 passport.use(new LocalStrategy(function(username, password, done) {
-    if (username && password === 'pass') return done(null, { username: username });
+    if (username && password) return done(null, { username: username });
     return done(null, false);
 }));
 
@@ -42,7 +42,7 @@ app.use('/api', bodyParser.json());
 app.get('/api/protected',
     function(req, res) {
         if (!req.user) return res.sendStatus(401);
-        res.send('You have access.');
+        res.send(req.user);
     }
 );
 
@@ -58,6 +58,7 @@ app.put('/api/auth',
 app.delete('/api/auth', function(req, res) {
     req.logout();
     res.send('You have logged out.');
+    res.redirect('/');
 });
 
 app.get('*', function(req, res) {

@@ -63,6 +63,17 @@
       }
     </style>
 
+    <iron-ajax
+      auto
+      id="checkLoginAjax"
+      method="get"
+      content-type="application/json"
+      handle-as="text"
+      url="http://localhost:3000/api/protected"
+      on-response="handleSessionResponse"
+      on-error="handleSessionError">
+    </iron-ajax>
+
     <app-location route="{{route}}"></app-location>
     <app-route
         route="{{route}}"
@@ -106,6 +117,7 @@
           <calling-planner-staging name="staging"></calling-planner-staging>
           <calling-planner-final name="final"></calling-planner-final>
           <calling-planner-login name="login"></calling-planner-login>
+          <calling-planner-logout name="logout"></calling-planner-logout>
           <calling-planner-view404 name="view404"></calling-planner-view404>
         </iron-pages>
       </app-header-layout>
@@ -130,6 +142,11 @@
           value: [{"name": "Bernie Sanders"}, {"name": "Donald Trump"}, {"name": "Neil Gorsuch"}],
           notify: true,
           reflectToAttribute: true
+        },
+
+        user: {
+          type: Object,
+          value: {}
         }
       },
 
@@ -149,6 +166,19 @@
           },
           sort: false
         });
+      },
+
+      handleSessionResponse: function(response) {
+        console.log("Session check:");
+        console.log(response);
+
+        this.user = JSON.parse(response.detail.response);
+
+      },
+
+      handleSessionError: function(event) {
+          this.error = event.detail.request.xhr.response;
+          console.log(this.error);
       },
 
       _routePageChanged: function(page) {

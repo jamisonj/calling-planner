@@ -69,11 +69,7 @@
             </div>
         </div>
 
-        <div id="authenticated" hidden$="[[!storedUser.loggedin]]">
-            <h2>Hello, [[storedUser.name]]!</h2>
-            <p>You are currently logged in.</p>
-            <paper-button raised class="primary" on-tap="postLogout">Log out</paper-button>
-        </div>    
+        <calling-planner-logout hidden$="[[!storedUser.loggedin]]"></calling-planner-logout>    
     </div>
 
   </template>
@@ -109,7 +105,7 @@
 
       postLogout: function() {
         //TODO: Set this up!
-      }
+      },
 
       handleUserResponse: function(event) {
       var response = event.detail.response;
@@ -118,6 +114,7 @@
 
       if (response) {
           console.log("Response: " + response);
+          console.log(this);
           this.error = '';
           this.storedUser = {
               name: this.formData.username,
