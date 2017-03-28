@@ -1,6 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="app-data.html">
+<link rel="import" href="calling-planner-data.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="calling-planner-logout">
@@ -21,20 +25,24 @@
       on-error="handleUserError">
     </iron-ajax>
 
-<!--     <app-data key="userData" data="{{storedUser}}"></app-data>
+    <app-data key="userData" data="{{storedUser}}"></app-data>
 
     <template is="dom-if" if="{{!link}}">
-        <paper-button raised on-tap="logout">Log Out</paper-button>
+        <paper-button raised on-tap="postLogout">Log Out</paper-button>
     </template>
 
     <template is="dom-if" if="{{link}}">
-        <a on-tap="logout" href>Log Out</a>
-    </template> -->
+        <a on-tap="postLogout" href>Log Out</a>
+    </template>
+
+    <template is="dom-if" if="[[error]]">
+      <p class="alert-error"><strong>Error:</strong> [[error]]</p>
+    </template>
 
     <div id="authenticated">
         <h2>Hello, [[storedUser.name]]!</h2>
         <p>You are currently logged in.</p>
-        <paper-button raised class="primary" on-tap="postLogout">Log out</paper-button>
+        <!-- <paper-button raised class="primary" on-tap="postLogout">Log out</paper-button> -->
     </div>
 
   </template>
@@ -43,19 +51,27 @@
     Polymer({
       is: 'calling-planner-logout',
       properties: {
-        storedUser: Object,
+        storedUser: {
+          type: Object,
+          value: {},
+          notify: true,
+          reflectToAttribute: true
+        },
         link: {
             type: Boolean,
             value: false
-        }
+        },
+        error: String
     },
-    logout: function() {
+    postLogout: function() {
         // remove user data
-        this.$.registerLogoutAjax.url = 'http://localhost:3000/api/auth';
-        this._setReqBody();
+        this.$.registerLogoutAjax.url = 'http://localhost:3000/api/logout';
+        // this._setReqBody();
         this.$.registerLogoutAjax.generateRequest();
         this.storedUser = null;
     }
+
+
 
     });
   </script>

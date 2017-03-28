@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="calling-planner-data.html">
+<link rel="import" href="calling-planner-logout.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="calling-planner-login">
@@ -36,12 +38,14 @@
 
     <iron-ajax
       id="registerLoginAjax"
-      method="put"
+      method="post"
       content-type="application/json"
       handle-as="text"
       on-response="handleUserResponse"
       on-error="handleUserError">
     </iron-ajax>
+
+    <app-data key="userData" data="{{storedUser}}"></app-data>
 
     <div class="card">
         <div id="unauthenticated" hidden$="[[storedUser.loggedin]]">
@@ -69,7 +73,12 @@
             </div>
         </div>
 
-        <calling-planner-logout hidden$="[[!storedUser.loggedin]]"></calling-planner-logout>    
+<!--         <div id="authenticated" hidden$="[[!storedUser.loggedin]]">
+            <h2>Hello, [[storedUser.name]]!</h2>
+            <p>You are currently logged in. You can access <a href="/secret-quotes">Secret Quotes</a>!</p>
+        </div> -->
+
+        <calling-planner-logout stored-user="{{storedUser}}" hidden$="[[!storedUser.loggedin]]"></calling-planner-logout>    
     </div>
 
   </template>
@@ -82,7 +91,12 @@
             type: Object,
             value: {}
         },
-        storedUser: Object,
+        storedUser: {
+          type: Object,
+          value: {},
+          notify: true,
+          reflectToAttribute: true
+        },
         error: String
       },
 
@@ -91,7 +105,7 @@
       },  
 
       postLogin: function() {
-          this.$.registerLoginAjax.url = 'http://localhost:3000/api/auth';
+          this.$.registerLoginAjax.url = 'http://localhost:3000/api/login';
           this._setReqBody();
           this.$.registerLoginAjax.generateRequest();
       },

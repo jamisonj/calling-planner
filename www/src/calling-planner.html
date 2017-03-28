@@ -10,6 +10,8 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="calling-planner-data.html">
+<link rel="import" href="calling-planner-logout.html">
 <link rel="import" href="calling-planner-icons.html">
 
 <dom-module id="calling-planner">
@@ -63,6 +65,8 @@
       }
     </style>
 
+    <app-data key="userData" data="{{storedUser}}"></app-data>
+
     <iron-ajax
       auto
       id="checkLoginAjax"
@@ -101,7 +105,7 @@
             <div main-title>Calling Planner</div>
             <a name="login" href="/login">Login</a>
           </app-toolbar>
-          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <iron-selector hidden$="[[!storedUser.loggedin]] selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
             <a name="brainstorm" href="/brainstorm">Brainstorm Zone</a>
             <a name="staging" href="/staging">Staging Zone</a>
             <a name="final" href="/final">Final Plan</a>
@@ -144,9 +148,11 @@
           reflectToAttribute: true
         },
 
-        user: {
+        storedUser: {
           type: Object,
-          value: {}
+          value: {},
+          notify: true,
+          reflectToAttribute: true
         }
       },
 
@@ -170,15 +176,24 @@
 
       handleSessionResponse: function(response) {
         console.log("Session check:");
-        console.log(response);
 
-        this.user = JSON.parse(response.detail.response);
+        this.storedUser = JSON.parse(response.detail.response);
 
+        if (response) {
+          console.log("Response: " + response);
+          console.log(this);
+          this.error = '';
+          this.storedUser = {
+              name: this.formData.username,
+              loggedin: true
+          };
+        }
       },
 
       handleSessionError: function(event) {
           this.error = event.detail.request.xhr.response;
           console.log(this.error);
+          this.storedUser.loggedin = false;
       },
 
       _routePageChanged: function(page) {
