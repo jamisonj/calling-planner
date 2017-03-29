@@ -25,7 +25,19 @@
       on-error="handleUserError">
     </iron-ajax>
 
+    <!-- Allows us to share this data with this custom element. -->
     <app-data key="userData" data="{{storedUser}}"></app-data>
+
+    <template is="dom-if" if="[[error]]">
+      <p class="alert-error"><strong>Error:</strong> [[error]]</p>
+    </template>
+
+    <template is="dom-if" if="{{page}}">
+      <div id="authenticated">
+          <h2>Hello, [[storedUser.username]]!</h2>
+          <p>You are currently logged in.</p>
+      </div>
+    </template>
 
     <template is="dom-if" if="{{!link}}">
         <paper-button raised on-tap="postLogout">Log Out</paper-button>
@@ -35,44 +47,49 @@
         <a on-tap="postLogout" href>Log Out</a>
     </template>
 
-    <template is="dom-if" if="[[error]]">
-      <p class="alert-error"><strong>Error:</strong> [[error]]</p>
-    </template>
-
-    <div id="authenticated">
-        <h2>Hello, [[storedUser.name]]!</h2>
-        <p>You are currently logged in.</p>
-        <!-- <paper-button raised class="primary" on-tap="postLogout">Log out</paper-button> -->
-    </div>
-
   </template>
 
   <script>
     Polymer({
       is: 'calling-planner-logout',
       properties: {
-        storedUser: {
-          type: Object,
-          value: {},
-          notify: true,
-          reflectToAttribute: true
-        },
+        storedUser: Object,
         link: {
             type: Boolean,
             value: false
         },
+        page: {
+          type: Boolean,
+          value: false
+        },
         error: String
-    },
-    postLogout: function() {
-        // remove user data
-        this.$.registerLogoutAjax.url = 'http://localhost:3000/api/logout';
-        // this._setReqBody();
-        this.$.registerLogoutAjax.generateRequest();
-        this.storedUser = null;
-    }
+      },
 
+      _setReqBody: function() {
+          this.$.registerLogoutAjax.body = {};
+      },
 
+      postLogout: function() {
+          // remove user data
+          this.$.registerLogoutAjax.url = './api/logout';
+          this._setReqBody();
+          this.$.registerLogoutAjax.generateRequest();
+          this.storedUser = null;
+      },
 
+      handleUserResponse: function(event) {
+        var response = event.detail.response;
+
+        console.log(response);
+
+        // reset form data
+        this.formData = {};
+      },
+
+      handleUserError: function(event) {
+        this.error = event.detail.request.xhr.response;
+      }
+      
     });
   </script>
 </dom-module>

@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="calling-planner-staging">
@@ -11,6 +12,22 @@
       }
     </style>
 
+    <iron-ajax
+      auto
+      id="checkLoginAjax"
+      method="get"
+      content-type="application/json"
+      handle-as="text"
+      url="http://localhost:3000/api/protected"
+      on-response="handleSessionResponse"
+      on-error="handleSessionError">
+    </iron-ajax>
+
+    <!-- Allows us to share this data with this custom element. -->
+    <app-data key="userData" data="{{storedUser}}"></app-data>
+
+    <!-- <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage> -->
+
     <div class="card">
       <div class="circle">2</div>
       <h1>View Two</h1>
@@ -22,6 +39,33 @@
   <script>
     Polymer({
       is: 'calling-planner-staging',
+      properties: {
+        storedUser: Object
+      },
+
+      handleSessionResponse: function(event) {
+        var response = event.detail.response;
+
+        console.log(response);
+
+        if (response) {
+            console.log("Response: " + response);
+            console.log(this);
+            this.error = '';
+            var user = JSON.parse(response);
+            this.storedUser = {
+                username: user.username,
+                loggedin: true
+            };
+        }
+      },
+
+      handleSessionError: function(event) {
+          this.error = event.detail.request.xhr.response;
+          console.log(this.error);
+          this.storedUser.loggedin = false;
+      }
+
     });
   </script>
 </dom-module>

@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="calling-planner-data.html">
 <link rel="import" href="calling-planner-logout.html">
 <link rel="import" href="calling-planner-icons.html">
@@ -65,9 +66,12 @@
       }
     </style>
 
+    <!-- Allows us to share this data with this custom element. -->
     <app-data key="userData" data="{{storedUser}}"></app-data>
 
-    <iron-ajax
+    <!-- <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage> -->
+
+<!--     <iron-ajax
       auto
       id="checkLoginAjax"
       method="get"
@@ -76,7 +80,7 @@
       url="http://localhost:3000/api/protected"
       on-response="handleSessionResponse"
       on-error="handleSessionError">
-    </iron-ajax>
+    </iron-ajax> -->
 
     <app-location route="{{route}}"></app-location>
     <app-route
@@ -103,12 +107,16 @@
           <app-toolbar>
             <paper-icon-button icon="calling-planner-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Calling Planner</div>
-            <a name="login" href="/login">Login</a>
+            <div class="logout-greeting" hidden$="[[!storedUser.loggedin]]">
+              <span class="greeting" hidden$="[[!storedUser.loggedin]]">Hi, [[storedUser.username]]!</span>
+              <calling-planner-logout hidden$="[[!storedUser.loggedin]]" link></calling-planner-logout>
+            </div>
+            <a name="login" href="/login" hidden$="[[storedUser.loggedin]]">Login</a>
           </app-toolbar>
-          <iron-selector hidden$="[[!storedUser.loggedin]] selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation" hidden$="[[!storedUser.loggedin]]">
             <a name="brainstorm" href="/brainstorm">Brainstorm Zone</a>
             <a name="staging" href="/staging">Staging Zone</a>
-            <a name="final" href="/final">Final Plan</a>
+            <a name="final" href="/final" >Final Plan</a>
           </iron-selector>
         </app-header>
 
@@ -141,16 +149,16 @@
           observer: '_pageChanged',
         },
 
-        names: { // This is where the entire ward list of names will go. Current names are placeholders.
-          type: Array,
-          value: [{"name": "Bernie Sanders"}, {"name": "Donald Trump"}, {"name": "Neil Gorsuch"}],
+        storedUser: {
+          type: Object,
+          value: {},
           notify: true,
           reflectToAttribute: true
         },
 
-        storedUser: {
-          type: Object,
-          value: {},
+        names: { // This is where the entire ward list of names will go. Current names are placeholders.
+          type: Array,
+          value: [{"name": "Bernie Sanders"}, {"name": "Donald Trump"}, {"name": "Neil Gorsuch"}],
           notify: true,
           reflectToAttribute: true
         }
@@ -174,27 +182,28 @@
         });
       },
 
-      handleSessionResponse: function(response) {
-        console.log("Session check:");
+      // handleSessionResponse: function(event) {
+      //   var response = event.detail.response;
 
-        this.storedUser = JSON.parse(response.detail.response);
+      //   console.log(response);
 
-        if (response) {
-          console.log("Response: " + response);
-          console.log(this);
-          this.error = '';
-          this.storedUser = {
-              name: this.formData.username,
-              loggedin: true
-          };
-        }
-      },
+      //   if (response) {
+      //       console.log("Response: " + response);
+      //       console.log(this);
+      //       this.error = '';
+      //       var user = JSON.parse(response);
+      //       this.storedUser = {
+      //           username: user.username,
+      //           loggedin: true
+      //       };
+      //   }
+      // },
 
-      handleSessionError: function(event) {
-          this.error = event.detail.request.xhr.response;
-          console.log(this.error);
-          this.storedUser.loggedin = false;
-      },
+      // handleSessionError: function(event) {
+      //     this.error = event.detail.request.xhr.response;
+      //     console.log(this.error);
+      //     this.storedUser.loggedin = false;
+      // },
 
       _routePageChanged: function(page) {
         this.page = page || 'login';

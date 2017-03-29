@@ -45,6 +45,9 @@
       on-error="handleUserError">
     </iron-ajax>
 
+    <!-- <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage> -->
+
+    <!-- Allows us to share this data with this custom element. -->
     <app-data key="userData" data="{{storedUser}}"></app-data>
 
     <div class="card">
@@ -73,12 +76,7 @@
             </div>
         </div>
 
-<!--         <div id="authenticated" hidden$="[[!storedUser.loggedin]]">
-            <h2>Hello, [[storedUser.name]]!</h2>
-            <p>You are currently logged in. You can access <a href="/secret-quotes">Secret Quotes</a>!</p>
-        </div> -->
-
-        <calling-planner-logout stored-user="{{storedUser}}" hidden$="[[!storedUser.loggedin]]"></calling-planner-logout>    
+        <calling-planner-logout stored-user="{{storedUser}}" hidden$="[[!storedUser.loggedin]]" page></calling-planner-logout>    
     </div>
 
   </template>
@@ -105,7 +103,7 @@
       },  
 
       postLogin: function() {
-          this.$.registerLoginAjax.url = 'http://localhost:3000/api/login';
+          this.$.registerLoginAjax.url = './api/login';
           this._setReqBody();
           this.$.registerLoginAjax.generateRequest();
       },
@@ -122,22 +120,25 @@
       },
 
       handleUserResponse: function(event) {
-      var response = event.detail.response;
+        var response = event.detail.response;
 
-      console.log(response);
+        console.log(response);
 
-      if (response) {
-          console.log("Response: " + response);
-          console.log(this);
-          this.error = '';
-          this.storedUser = {
-              name: this.formData.username,
-              loggedin: true
-          };
-      }
+        if (response) {
+            console.log("Response: " + response);
+            console.log(this);
+            this.error = '';
+            var user = JSON.parse(response);
+            this.storedUser = {
+                username: user.username,
+                loggedin: true
+            };
+            
+            //TODO: Set up redirecting.
+        }
 
-      // reset form data
-      this.formData = {};
+        // reset form data
+        this.formData = {};
       },
 
       handleUserError: function(event) {

@@ -40,33 +40,32 @@ app.use('/api', bodyParser.json());
 // app.use('/api/people', peopleRoutes);
 
 // specify a URL that only authenticated users can hit
-app.get('/api/protected',
-    function(req, res) {
-        if (!req.user) return res.sendStatus(401);
-        res.send(req.user);
-    }
-);
+app.get('/api/protected', function(req, res) {
+    if (!req.user) return res.sendStatus(401);
+    res.send(data[req.user.username]);
+});
 
-// app.get('/brainstorm', function(req, res) {
-//     if (!req.user) return res.sendStatus(401);
-//     res.sendFile('/brainstorm', {root: './www/src'});
-// });
+app.get('/brainstorm', function(req, res) {
+    if (!req.user) return res.sendStatus(401);
+    res.sendFile('www/index.html', {root: '.'});
+});
 
-// app.get('/staging', function(req, res) {
-//     if (!req.user) return res.sendStatus(401);
-//     res.sendFile('/staging', {root: './www/src'});
-// });
+app.get('/staging', function(req, res) {
+    if (!req.user) return res.sendStatus(401);
+    res.sendFile('www/index.html', {root: '.'});
+});
 
-// app.get('/final', function(req, res) {
-//     if (!req.user) return res.sendStatus(401);
-//     res.sendFile('/final', {root: './www/src'});
-// });
+app.get('/final', function(req, res) {
+    if (!req.user) return res.sendStatus(401);
+    res.sendFile('www/index.html', {root: '.'});
+});
 
 // specify the login url
 app.post('/api/login', passport.authenticate('local'), function(req, res) {
 
     // If the user doesn't have an entry in data, add one.
     if (!data[req.user.username]) {
+        console.log(req.user);
         data[req.user.username] = req.user;
     }
 
@@ -75,8 +74,9 @@ app.post('/api/login', passport.authenticate('local'), function(req, res) {
 
 // log the user out
 app.delete('/api/logout', function(req, res) {
+    // if (!req.user) return res.sendStatus(401);
     req.logout();
-    res.send('You have logged out.');
+    res.status(200).send("User has logged out."); 
     res.redirect('/');
 });
 
