@@ -68,7 +68,13 @@
         route="{{route}}"
         pattern="/:page"
         data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+        tail="{{subroute}}">
+    </app-route>
+    <!-- <app-route
+        route="{{subroute}}"
+        pattern="/:id"
+        data="{{subrouteData}}">
+    </app-route> -->
 
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
@@ -114,7 +120,7 @@
           <calling-planner-brainstorm name="brainstorm"></calling-planner-brainstorm>
           <calling-planner-staging name="staging"></calling-planner-staging>
           <calling-planner-final name="final"></calling-planner-final>
-          <calling-planner-org name="org"></calling-planner-org>
+          <calling-planner-org name="org" org-id="{{subroute}}"></calling-planner-org>
           <calling-planner-view404 name="view404"></calling-planner-view404>
         </iron-pages>
       </app-header-layout>

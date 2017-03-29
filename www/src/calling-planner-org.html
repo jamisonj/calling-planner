@@ -61,11 +61,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-repeat" items="{{groups}}">
         <div>
           <h1>{{item.name}}</h1>
-          <template is="dom-repeat" items="{{item.assignmentsInGroup}}" as="assignment" index-as="assignement_number">
+          <template is="dom-repeat" items="{{item.callingsInGroup}}" as="calling" index-as="calling_number">
             <div id="org" class="card">
-              <h2>{{assignment.positionName}}</h2>
+              <h2>{{calling.callingTitle}}</h2>
                 <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
-                  <li>{{assignment.person}}</li>
+                  <template is="dom-repeat" items = "{{calling.callingMembers}}" as="member" index-as="member_number">
+                    <li>{{member.preferredName}}</li>
+                  </template>
                 </ul>
             </div>
           </template>
@@ -82,59 +84,140 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         groups: {
           type: Array,
-          value: getOrganization(window.json.callings),
           notify: true,
           reflectToAttribute: true
+        },
+        orgId: {
+          type: Number,
         }
       },
       created: function() {
-        console.log(getOrganization(window.json.callings));
-        // window.location.reload(true)
-      }
-    });
+        console.log(this.orgId);
+        let id = this.orgId.path.split('/')[1];
+        console.log(id);
+        this.groups = this.getOrganization(json.callings, id);
+      },
 
-    function getOrganization(json) {
-      let callingId = null;
-      let callingsInGroupIndex = -1;
-      const orgId = window.location.pathname.split('/')[2];
-      let org = json[orgId].children;
-      let category = json[orgId];
-      for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
-        for(let j = 0; j < org[i].assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
-          // console.log(org[i].assignmentsInGroup[j])
-          if(!org[i].callingsInGroup) {
-            org[i].callingsInGroup = [] //initialize or append to array of calling objects
-            // category.callingsInGroup = []
+      getOrganization : (json, id) => {
+        console.log(id);
+        console.log(json);
+
+        let callingName = null;
+        let callingsInGroupIndex = -1;
+        // const orgId = window.location.pathname.split('/')[2]; 
+        let org = json[id].children;
+
+        if (!org) {
+          org = json[id];
+          this.extractCallingsFromAssignmentsInGroup(null, org);
+          return [org]
+        }
+        else {
+          return this.appendCallingGroupToObject(org);
+        }
+      },
+
+      appendCallingGroupToObject: (org) => {
+        for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
+          extractCallingsFromAssignmentsInGroup(i,org);
+        }
+        return org;
+      },
+
+      extractCallingsFromAssignmentsInGroup : (i, org) => {
+
+        (i || i === 0) ? current_org = org[i] : current_org = org;
+        if (current_org.children) {
+          console.log("found child")
+          return appendCallingGroupToObject(current_org);
+        }
+
+        for(let j = 0; j < current_org.assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
+          if(!current_org.callingsInGroup) {
+            current_org.callingsInGroup = [] //initialize or append to array of calling objects
             callingsInGroupIndex = -1;
+            callingName = null;
           }
-          // console.log('initialzed array', org[i].callingsInGroup)
-          if(org[i].assignmentsInGroup[j].positionTypeId === callingId) { //if like the one before
-            try {
-              org[i].callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
-            } catch(e) {
-              callingId = org[i].assignmentsInGroup[j].positionTypeId;
-              let calling = {};
-              calling['callingTitle'] = org[i].assignmentsInGroup[j].positionName;
-              calling['callingMembers'] = [];
-              calling['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
-              org[i].callingsInGroup.push(calling)   //add calling object to array
-              callingsInGroupIndex++;
-            }
+          if(current_org.assignmentsInGroup[j].positionName === callingName) { //if like the one before
+              current_org.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
           }
           else {
-            callingId = org[i].assignmentsInGroup[j].positionTypeId;
+            callingName = current_org.assignmentsInGroup[j].positionName;
             let calling = {};
-            calling['callingTitle'] = org[i].assignmentsInGroup[j].positionName;
+            calling['callingTitle'] = current_org.assignmentsInGroup[j].positionName;
             calling['callingMembers'] = [];
-            calling['callingMembers'].push(window.people[org[i].assignmentsInGroup[j].individualId])
-            org[i].callingsInGroup.push(calling)   //add calling object to array
+            calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
+            current_org.callingsInGroup.push(calling)   //add calling object to array
             callingsInGroupIndex++;
           }
-          // console.log(org[i].callingsInGroup)
-          org[i].assignmentsInGroup[j].person = window.people[org[i].assignmentsInGroup[j].individualId].preferredName;
-        }
-      }
-      return org;
-    }
+        } 
+        return null;
+      } //end function
+
+    }); //end polymer declaration
+
+    // function getOrganization(json) {
+    //   const org_elem = document.querySelector('calling-planner-org');
+    //   console.log(org_elem);
+
+    //   let callingName = null;
+    //   let callingsInGroupIndex = -1;
+    //   const orgId = window.location.pathname.split('/')[2]; 
+    //   let org = json[orgId].children;
+    //   // console.log(json, orgId)
+    //   // console.log(org);
+    //   if (!org) {
+    //     org = json[orgId];
+    //     extractCallingsFromAssignmentsInGroup(null, org);
+    //     // console.log(org);
+    //     return [org]
+    //   }
+    //   else {
+    //     return appendCallingGroupToObject(org);
+    //   }
+    // }
+
+    // function appendCallingGroupToObject(org) {
+    //   for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
+    //     extractCallingsFromAssignmentsInGroup(i,org);
+    //   }
+    //   return org;
+    // }
+
+    // function extractCallingsFromAssignmentsInGroup(i, org) {
+
+    //   // console.log('i',i);
+    //   // console.log('org',org);
+    //   // console.log('orgi',org[i]);
+
+    //   (i || i === 0) ? current_org = org[i] : current_org = org;
+    //   if (current_org.children) {
+    //     console.log("found child")
+    //     return appendCallingGroupToObject(current_org);
+    //   }
+
+    //   // console.log('current_org',current_org);
+    //   for(let j = 0; j < current_org.assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
+    //     if(!current_org.callingsInGroup) {
+    //       current_org.callingsInGroup = [] //initialize or append to array of calling objects
+    //       callingsInGroupIndex = -1;
+    //       callingName = null;
+    //     }
+    //     if(current_org.assignmentsInGroup[j].positionName === callingName) { //if like the one before
+    //         current_org.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
+    //     }
+    //     else {
+    //       callingName = current_org.assignmentsInGroup[j].positionName;
+    //       let calling = {};
+    //       calling['callingTitle'] = current_org.assignmentsInGroup[j].positionName;
+    //       calling['callingMembers'] = [];
+    //       calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
+    //       current_org.callingsInGroup.push(calling)   //add calling object to array
+    //       callingsInGroupIndex++;
+    //     }
+    //     // current_org.assignmentsInGroup[j].person = window.people[current_org.assignmentsInGroup[j].individualId].preferredName;
+    //   }
+    //   return null;
+    // }
   </script>
 </dom-module>

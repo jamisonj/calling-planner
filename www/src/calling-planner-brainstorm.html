@@ -57,7 +57,7 @@
 
     <div id="content">
       <template is="dom-repeat" items="{{orgs}}">
-        <a href='/org/{{item.id}}' class="card_link">
+        <a href='/org/{{item.id}}' class="card_link" onclick="window.location.reload;">
           <div class="card org">
             <div class="rate-header">{{item.name}}</div>
             <div class="rate-header">{{item.id}}</div>
@@ -66,53 +66,6 @@
         </a>
       </template>
       </div>
-
-    <div id="org" class="card">
-      <div class="circle">1</div>
-      <h1>Bishopric</h1>
-      <h2>Bishop</h2>
-      <!-- <div class="sortable-ghost"> -->
-        <!-- <sortable-js group='{ "name": "brainstorm", "pull": "true", "put": "true"}' filter=".remove">
-          
-            <template is="dom-repeat" items={{bishop_items}}>
-              <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
-            </template>
-          
-        </sortable-js> -->
-        <!-- </div> -->
-
-        <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
-          <li><span class="handle">::</span> Gary LeeMaster <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Evan McMullin <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Rand Paul <span class="remove">X</span></li>
-        </ul>
-      
-      <h2>First Counselor</h2>
-<!--         <sortable-js group='{ "name": "brainstorm", "pull": "true", "put": "true"}' filter=".remove">
-            <template is="dom-repeat" items={{fc_items}}>
-              <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
-            </template>
-        </sortable-js> -->
-
-        <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
-          <li><span class="handle">::</span> Gary LeeMaster <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Evan McMullin <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Rand Paul <span class="remove">X</span></li>
-        </ul>
-      <h2>Second Counselor</h2>
-<!--         <sortable-js group='{ "name": "brainstorm", "pull": "true", "put": "true"}' filter=".remove">
-            <template is="dom-repeat" items={{sc_items}} style="min-height: 50px; background-color: #fafafa;">
-              <div><span class="handle">::</span> {{item.name}} <span class="remove">X</span></div>
-            </template>
-            <div style="min-height: 5px; background-color: #fafafa;"></div>
-        </sortable-js> -->
-
-        <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
-          <li><span class="handle">::</span> Gary LeeMaster <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Evan McMullin <span class="remove">X</span></li>
-          <li><span class="handle">::</span> Rand Paul <span class="remove">X</span></li>
-        </ul>
-    </div>
     
   </template>
 
