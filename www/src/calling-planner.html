@@ -132,6 +132,7 @@
           <calling-planner-staging name="staging"></calling-planner-staging>
           <calling-planner-final name="final"></calling-planner-final>
           <calling-planner-login name="login"></calling-planner-login>
+          <calling-planner-register name="register"></calling-planner-register>
           <calling-planner-logout name="logout"></calling-planner-logout>
           <calling-planner-view404 name="view404"></calling-planner-view404>
         </iron-pages>
@@ -152,12 +153,7 @@
           observer: '_pageChanged',
         },
 
-        storedUser: {
-          type: Object,
-          value: {},
-          notify: true,
-          reflectToAttribute: true
-        },
+        storedUser: Object,
 
         names: { // This is where the entire ward list of names will go. Current names are placeholders.
           type: Array,

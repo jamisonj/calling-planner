@@ -63,6 +63,22 @@ app.get('/final', function(req, res) {
     res.sendFile('www/index.html', {root: '.'});
 });
 
+app.get('/login', function(req, res) {
+    res.sendFile('www/index.html', {root: '.'});
+});
+
+app.post('/api/register', passport.authenticate('local'), function(req, res) {
+    if (data[req.user.username]) {
+        res.sendStatus(401).send('This username is already registered.');
+    }
+
+    else {
+        data[req.user.username] = req.user;
+    }
+
+    res.send(data[req.user.username]);
+});
+
 // Login URL.
 app.post('/api/login', passport.authenticate('local'), function(req, res) {
 

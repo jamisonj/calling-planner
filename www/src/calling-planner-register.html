@@ -9,7 +9,7 @@
 <link rel="import" href="calling-planner-logout.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="calling-planner-login">
+<dom-module id="calling-planner-register">
   <template>
     <style include="shared-styles">
       :host {
@@ -38,7 +38,7 @@
     </style>
 
     <iron-ajax
-      id="LoginAjax"
+      id="registerAjax"
       method="post"
       content-type="application/json"
       handle-as="text"
@@ -52,10 +52,10 @@
     <app-data key="userData" data="{{storedUser}}"></app-data>
 
     <div class="card">
-        <div id="unauthenticated" hidden$="[[storedUser.loggedin]]">
-            <h1>Log In</h1>
+        <div id="unauthenticated">
+            <h1>Register</h1>
 
-            <p><strong>Log in</strong> or <strong>sign up</strong>!</p>
+            <p><strong>Create an Account</strong>!</p>
 
             <template is="dom-if" if="[[error]]">
               <p class="alert-error"><strong>Error:</strong> [[error]]</p>
@@ -71,52 +71,49 @@
                 <input is="iron-input" id="password" type="password" bind-value="{{formData.password}}">
             </paper-input-container>
 
-            <div class="wrapper-btns">
-                <paper-button raised class="primary" on-tap="postLogin">Log In</paper-button>
-                <a href="/register" class="register-link">Sign Up</a>
-            </div>
-        </div>
+            <paper-input-container>
+                <label>Email</label>
+                <input is="iron-input" id="email" type="email" bind-value="{{formData.email}}">
+            </paper-input-container>
 
-        <calling-planner-logout hidden$="[[!storedUser.loggedin]]" page></calling-planner-logout>    
+            <div class="wrapper-btns">
+                <paper-button raised class="primary" on-tap="postRegister">Register</paper-button>
+            </div>
+        </div>    
     </div>
 
-    <!-- Route for redirection after login. -->
-    <!-- <app-location route="{{route}}"></app-location> -->
+    <!-- Route for redirection after registration. -->
+    <app-location route="{{route}}"></app-location>
 
   </template>
 
   <script>
     Polymer({
-      is: 'calling-planner-login',
+      is: 'calling-planner-register',
       properties: {
         formData: {
             type: Object,
             value: {}
         },
-
         storedUser: Object,
-
         error: String
       },
 
       _setReqBody: function() {
-          this.$.LoginAjax.body = this.formData;
+          this.$.registerAjax.body = this.formData;
       },  
 
-      postLogin: function() {
-          this.$.LoginAjax.url = './api/login';
-          this._setReqBody();
-          this.$.LoginAjax.generateRequest();
+      postRegister: function() {
+        console.log("postRegister");
+        this.$.registerAjax.url = './api/register';
+        this._setReqBody();
+        this.$.registerAjax.generateRequest();
       },
 
       handleUserResponse: function(event) {
         var response = event.detail.response;
 
-        console.log(response);
-
         if (response) {
-            console.log("Response: " + response);
-            console.log(this);
             this.error = '';
             var user = JSON.parse(response);
             this.storedUser = {
@@ -125,7 +122,7 @@
             };
             
             //TODO: Set up redirecting.
-            this.set('route.path', '/brainstorm');
+            this.set('route.path', '/login');
         }
 
         // reset form data
