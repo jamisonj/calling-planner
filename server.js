@@ -39,28 +39,31 @@ app.use('/api', bodyParser.json());
 // app.use('/api/tasks', taskRoute);
 // app.use('/api/people', peopleRoutes);
 
-// specify a URL that only authenticated users can hit
-app.get('/api/protected', function(req, res) {
+// Our API can only be hit if the user is authenticated.
+app.get('/api/*', function(req, res) {
     if (!req.user) return res.sendStatus(401);
     res.send(data[req.user.username]);
 });
 
+// This page can only be hit if the user is authenticated.
 app.get('/brainstorm', function(req, res) {
     if (!req.user) return res.sendStatus(401);
     res.sendFile('www/index.html', {root: '.'});
 });
 
+// This page can only be hit if the user is authenticated.
 app.get('/staging', function(req, res) {
     if (!req.user) return res.sendStatus(401);
     res.sendFile('www/index.html', {root: '.'});
 });
 
+// This page can only be hit if the user is authenticated.
 app.get('/final', function(req, res) {
     if (!req.user) return res.sendStatus(401);
     res.sendFile('www/index.html', {root: '.'});
 });
 
-// specify the login url
+// Login URL.
 app.post('/api/login', passport.authenticate('local'), function(req, res) {
 
     // If the user doesn't have an entry in data, add one.
@@ -72,19 +75,16 @@ app.post('/api/login', passport.authenticate('local'), function(req, res) {
     res.send(data[req.user.username]);
 });
 
-// log the user out
+// Logout URL.
 app.delete('/api/logout', function(req, res) {
     // if (!req.user) return res.sendStatus(401);
     req.logout();
     res.status(200).send("User has logged out."); 
-    res.redirect('/');
 });
 
-app.get('*', function(req, res) {
+app.get('/', function(req, res) {
 	console.log(req.path);
-	// let fullPath = path.resolve(__dirname, 'www/index.html');
-	// console.log(fullPath);
-	res.sendFile('www/index.html', {root: '.'}); // Send the index file if not in api subdirectory.
+	res.sendFile('www/index.html', {root: '.'}); // Send the index file if no subdirectory specified.
 });
 
 app.listen(3000, function () {

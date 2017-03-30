@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="calling-planner-data.html">
 <link rel="import" href="shared-styles.html">
 
@@ -47,6 +48,9 @@
         <a on-tap="postLogout" href>Log Out</a>
     </template>
 
+    <!-- Route for redirection after login. -->
+    <app-location route="{{route}}"></app-location>
+
   </template>
 
   <script>
@@ -82,14 +86,14 @@
 
         console.log(response);
 
-        // reset form data
-        this.formData = {};
+        //TODO: Set up redirecting.
+        this.set('route.path', '/login');
       },
 
       handleUserError: function(event) {
         this.error = event.detail.request.xhr.response;
       }
-      
+
     });
   </script>
 </dom-module>

@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="calling-planner-data.html">
 <link rel="import" href="calling-planner-logout.html">
 <link rel="import" href="shared-styles.html">
@@ -79,6 +80,9 @@
         <calling-planner-logout stored-user="{{storedUser}}" hidden$="[[!storedUser.loggedin]]" page></calling-planner-logout>    
     </div>
 
+    <!-- Route for redirection after login. -->
+    <app-location route="{{route}}"></app-location>
+
   </template>
 
   <script>
@@ -115,10 +119,6 @@
           console.log("postRegister");
       },
 
-      postLogout: function() {
-        //TODO: Set this up!
-      },
-
       handleUserResponse: function(event) {
         var response = event.detail.response;
 
@@ -135,6 +135,7 @@
             };
             
             //TODO: Set up redirecting.
+            this.set('route.path', '/brainstorm');
         }
 
         // reset form data
