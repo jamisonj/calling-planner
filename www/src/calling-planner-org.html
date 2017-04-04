@@ -85,27 +85,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         groups: {
           type: Array,
           notify: true,
-          reflectToAttribute: true
         },
         orgId: {
           type: Number,
         }
       },
       created: function() {
-        console.log(this.orgId);
+        console.log('created');
         let id = this.orgId.path.split('/')[1];
-        console.log(id);
-        this.groups = this.getOrganization(json.callings, id);
+        this.properties.groups.value = this.getOrganization(json.callings, id);
       },
 
-      getOrganization : (json, id) => {
-        console.log(id);
-        console.log(json);
+      attributeChanged: function() {
+        var id = window.location.pathname.split('/')[2];
+        this.groups = this.getOrganization(json.callings, id);
+        console.log(this.groups);
+        // this.$.table_template.render();
+      },
 
+
+      getOrganization : (json, id) => {
         let callingName = null;
         let callingsInGroupIndex = -1;
         // const orgId = window.location.pathname.split('/')[2]; 
+        if(!id) return null;
         let org = json[id].children;
+        console.log(org)
 
         if (!org) {
           org = json[id];
@@ -113,111 +118,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return [org]
         }
         else {
-          return this.appendCallingGroupToObject(org);
+          return appendCallingGroupToObject(org);
         }
       },
-
-      appendCallingGroupToObject: (org) => {
-        for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
-          extractCallingsFromAssignmentsInGroup(i,org);
-        }
-        return org;
-      },
-
-      extractCallingsFromAssignmentsInGroup : (i, org) => {
-
-        (i || i === 0) ? current_org = org[i] : current_org = org;
-        if (current_org.children) {
-          console.log("found child")
-          return appendCallingGroupToObject(current_org);
-        }
-
-        for(let j = 0; j < current_org.assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
-          if(!current_org.callingsInGroup) {
-            current_org.callingsInGroup = [] //initialize or append to array of calling objects
-            callingsInGroupIndex = -1;
-            callingName = null;
-          }
-          if(current_org.assignmentsInGroup[j].positionName === callingName) { //if like the one before
-              current_org.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
-          }
-          else {
-            callingName = current_org.assignmentsInGroup[j].positionName;
-            let calling = {};
-            calling['callingTitle'] = current_org.assignmentsInGroup[j].positionName;
-            calling['callingMembers'] = [];
-            calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
-            current_org.callingsInGroup.push(calling)   //add calling object to array
-            callingsInGroupIndex++;
-          }
-        } 
-        return null;
-      } //end function
 
     }); //end polymer declaration
 
-    // function getOrganization(json) {
-    //   const org_elem = document.querySelector('calling-planner-org');
-    //   console.log(org_elem);
+    function appendCallingGroupToObject(org) {
+      for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
+        extractCallingsFromAssignmentsInGroup(i,org);
+      }
+      return org;
+    }
 
-    //   let callingName = null;
-    //   let callingsInGroupIndex = -1;
-    //   const orgId = window.location.pathname.split('/')[2]; 
-    //   let org = json[orgId].children;
-    //   // console.log(json, orgId)
-    //   // console.log(org);
-    //   if (!org) {
-    //     org = json[orgId];
-    //     extractCallingsFromAssignmentsInGroup(null, org);
-    //     // console.log(org);
-    //     return [org]
-    //   }
-    //   else {
-    //     return appendCallingGroupToObject(org);
-    //   }
-    // }
+    function extractCallingsFromAssignmentsInGroup(i, org) {
 
-    // function appendCallingGroupToObject(org) {
-    //   for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
-    //     extractCallingsFromAssignmentsInGroup(i,org);
-    //   }
-    //   return org;
-    // }
+      // console.log('i',i);
+      // console.log('org',org);
+      // console.log('orgi',org[i]);
 
-    // function extractCallingsFromAssignmentsInGroup(i, org) {
+      (i || i === 0) ? current_org = org[i] : current_org = org;
+      if (current_org.children) {
+        console.log("found child")
+        return appendCallingGroupToObject(current_org);
+      }
 
-    //   // console.log('i',i);
-    //   // console.log('org',org);
-    //   // console.log('orgi',org[i]);
-
-    //   (i || i === 0) ? current_org = org[i] : current_org = org;
-    //   if (current_org.children) {
-    //     console.log("found child")
-    //     return appendCallingGroupToObject(current_org);
-    //   }
-
-    //   // console.log('current_org',current_org);
-    //   for(let j = 0; j < current_org.assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
-    //     if(!current_org.callingsInGroup) {
-    //       current_org.callingsInGroup = [] //initialize or append to array of calling objects
-    //       callingsInGroupIndex = -1;
-    //       callingName = null;
-    //     }
-    //     if(current_org.assignmentsInGroup[j].positionName === callingName) { //if like the one before
-    //         current_org.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
-    //     }
-    //     else {
-    //       callingName = current_org.assignmentsInGroup[j].positionName;
-    //       let calling = {};
-    //       calling['callingTitle'] = current_org.assignmentsInGroup[j].positionName;
-    //       calling['callingMembers'] = [];
-    //       calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
-    //       current_org.callingsInGroup.push(calling)   //add calling object to array
-    //       callingsInGroupIndex++;
-    //     }
-    //     // current_org.assignmentsInGroup[j].person = window.people[current_org.assignmentsInGroup[j].individualId].preferredName;
-    //   }
-    //   return null;
-    // }
+      // console.log('current_org',current_org);
+      for(let j = 0; j < current_org.assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
+        if(!current_org.callingsInGroup) {
+          current_org.callingsInGroup = [] //initialize or append to array of calling objects
+          callingsInGroupIndex = -1;
+          callingName = 'unreplicable calling name 7878';
+        }
+        if(current_org.assignmentsInGroup[j].positionName === callingName) { //if like the one before
+          try {
+            current_org.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
+          }
+          catch (e) {
+            //pass
+          }
+          
+        }
+        else {
+          callingName = current_org.assignmentsInGroup[j].positionName;
+          let calling = {};
+          calling['callingTitle'] = current_org.assignmentsInGroup[j].positionName;
+          calling['callingMembers'] = [];
+          calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
+          current_org.callingsInGroup.push(calling)   //add calling object to array
+          callingsInGroupIndex++;
+        }
+        // current_org.assignmentsInGroup[j].person = window.people[current_org.assignmentsInGroup[j].individualId].preferredName;
+      }
+      return null;
+    }
   </script>
 </dom-module>

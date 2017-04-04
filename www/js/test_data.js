@@ -20,6 +20,3 @@ for(let i = 0; i < families.length; i++) {
 }
 
 window.people = people;
-
-// console.log(window.people);
-// console.log(window.json);
