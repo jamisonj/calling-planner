@@ -98,10 +98,10 @@ app.delete('/api/logout', function(req, res) {
     res.status(200).send("User has logged out."); 
 });
 
-app.get('/', function(req, res) {
-	console.log(req.path);
-	res.sendFile('www/index.html', {root: '.'}); // Send the index file if no subdirectory specified.
-});
+// app.get('/', function(req, res) {
+// 	console.log(req.path);
+// 	res.sendFile('www/index.html', {root: '.'}); // Send the index file if no subdirectory specified.
+// });
 
 app.listen(3000, function () {
   console.log('Calling Planner listening on port 3000!')

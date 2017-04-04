@@ -71,19 +71,19 @@
       }
     </style>
 
-    <!-- Allows us to share login data with this custom element. -->
-    <app-data key="userData" data="{{storedUser}}"></app-data>
-
     <iron-ajax
       auto
       id="checkLoginAjax"
       method="get"
       content-type="application/json"
-      handle-as="text"
+      handle-as="json"
       url="http://localhost:3000/api/auth"
       on-response="handleSessionResponse"
       on-error="handleSessionError">
     </iron-ajax>
+
+    <!-- Allows us to share login data with this custom element. -->
+    <app-data key="userData" data="{{storedUser}}"></app-data>
 
     <app-location route="{{route}}"></app-location>
     <app-route
@@ -110,13 +110,13 @@
           <app-toolbar>
             <paper-icon-button icon="calling-planner-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Calling Planner</div>
-            <div class="logout-greeting" hidden$="[[!storedUser.loggedin]]">
-              <span class="greeting" hidden$="[[!storedUser.loggedin]]">Hi, [[storedUser.username]]!</span>
-              <calling-planner-logout hidden$="[[!storedUser.loggedin]]" link></calling-planner-logout>
+            <div class="logout-greeting" hidden$="{{!storedUser.loggedin}}">
+              <span class="greeting">Hi, {{storedUser.username}}!</span>
+              <calling-planner-logout link></calling-planner-logout>
             </div>
-            <a name="login" href="/login" hidden$="[[storedUser.loggedin]]">Login</a>
+            <a name="login" href="/login" hidden$="{{storedUser.loggedin}}">Login</a>
           </app-toolbar>
-          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation" hidden$="[[!storedUser.loggedin]]">
+          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation" hidden$="{{!storedUser.loggedin}}">
             <a name="brainstorm" href="/brainstorm">Brainstorm Zone</a>
             <a name="staging" href="/staging">Staging Zone</a>
             <a name="final" href="/final" >Final Plan</a>
@@ -131,7 +131,7 @@
           <calling-planner-brainstorm name="brainstorm"></calling-planner-brainstorm>
           <calling-planner-staging name="staging"></calling-planner-staging>
           <calling-planner-final name="final"></calling-planner-final>
-          <calling-planner-login name="login"></calling-planner-login>
+          <calling-planner-login storedUser="{{this.storedUser.username}}" name="login"></calling-planner-login>
           <calling-planner-register name="register"></calling-planner-register>
           <calling-planner-logout name="logout"></calling-planner-logout>
           <calling-planner-view404 name="view404"></calling-planner-view404>
@@ -153,7 +153,16 @@
           observer: '_pageChanged',
         },
 
-        storedUser: Object,
+        storedUser: {
+          type: Object, 
+          observer: 'testUser',
+          value: {}
+        },
+
+        // activeUser: {
+        //   type: Object,
+        //   observer: 'testUser'
+        // },
 
         names: { // This is where the entire ward list of names will go. Current names are placeholders.
           type: Array,
@@ -167,7 +176,19 @@
         '_routePageChanged(routeData.page)',
       ],
 
+      testUser: function () {
+        console.log(arguments);
+      },
+
       ready: function () {
+        // this.$.checkLoginAjax.generateRequest();
+
+        var component = this;
+
+        // setInterval(function() {
+        //   console.log(component.activeUser);
+        // }, 2000);
+
         var element = Polymer.dom(this.root).querySelector('.simple-list');
 
         Sortable.create(element, {
@@ -184,22 +205,24 @@
       handleSessionResponse: function(event) {
         var response = event.detail.response;
 
-        console.log(response);
+        // console.log(response);
 
         if (response) {
             this.error = '';
-            var user = JSON.parse(response);
+
             this.storedUser = {
-                username: user.username,
+                username: response.username,
                 loggedin: true
             };
         }
+
+        console.log(this.storedUser);
       },
 
       handleSessionError: function(event) {
           this.error = event.detail.request.xhr.response;
           console.log(this.error);
-          this.storedUser.loggedin = false;
+          // this.storedUser.loggedin = false;
       },
 
       _routePageChanged: function(page) {
@@ -213,7 +236,7 @@
       _pageChanged: function(page) {
 
         //Run the AJAX request when the index.html page is refreshed.
-        this.$.checkLoginAjax.generateRequest();
+        // this.$.checkLoginAjax.generateRequest();
 
         // Load page import on demand. Show 404 page if fails.
         var resolvedPageUrl = this.resolveUrl('calling-planner-' + page + '.html');

@@ -41,12 +41,12 @@
       id="LoginAjax"
       method="post"
       content-type="application/json"
-      handle-as="text"
+      handle-as="json"
       on-response="handleUserResponse"
       on-error="handleUserError">
     </iron-ajax>
 
-    <!-- <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage> -->
+    <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage>
 
     <!-- Allows us to share this data with this custom element. -->
     <app-data key="userData" data="{{storedUser}}"></app-data>
@@ -81,7 +81,7 @@
     </div>
 
     <!-- Route for redirection after login. -->
-    <!-- <app-location route="{{route}}"></app-location> -->
+    <app-location route="{{route}}"></app-location>
 
   </template>
 
@@ -94,9 +94,11 @@
             value: {}
         },
 
-        storedUser: Object,
-
         error: String
+      },
+
+      ready: function() {
+        console.log(this.storedUser);
       },
 
       _setReqBody: function() {
@@ -115,18 +117,17 @@
         console.log(response);
 
         if (response) {
-            console.log("Response: " + response);
-            console.log(this);
             this.error = '';
-            var user = JSON.parse(response);
+
             this.storedUser = {
-                username: user.username,
+                username: response.username,
                 loggedin: true
             };
             
-            //TODO: Set up redirecting.
             this.set('route.path', '/brainstorm');
         }
+
+        console.log(this.storedUser);
 
         // reset form data
         this.formData = {};

@@ -99,6 +99,10 @@
         error: String
       },
 
+      ready: function() {
+        console.log(this.storedUser);
+      },
+
       _setReqBody: function() {
           this.$.registerAjax.body = this.formData;
       },  
@@ -118,7 +122,8 @@
             var user = JSON.parse(response);
             this.storedUser = {
                 username: user.username,
-                loggedin: true
+                loggedin: true,
+                notify: true
             };
             
             //TODO: Set up redirecting.
