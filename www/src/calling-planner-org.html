@@ -1,0 +1,176 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<script src="../js/test_data.js"></script>
+
+<dom-module id="calling-planner-org">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 
+        10px;
+      }
+      paper-card.rate { @apply(--layout-horizontal); }
+      .rate-image {
+        width: 200px;
+        height: 170px;
+        background: url('./donuts.jpg');
+        background-size: cover;
+      }
+      .rate-content {
+        @apply(--layout-flex);
+        float: left;
+      }
+      .rate-header { @apply(--paper-font-headline); }
+      .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+      paper-icon-button.rate-icon {
+        --iron-icon-fill-color: white;
+        --iron-icon-stroke-color: var(--paper-grey-600);
+      }
+      .org {
+        transition: box-shadow .5s;
+        width: 200px;
+        display: inline-block;
+        margin: 8px;
+        padding: 0px;
+      }
+
+      .org:hover {
+        z-index:1000;
+        box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+        -webkit-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+        -moz-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
+      }
+      .card_link {
+        text-decoration: none;
+      }
+    </style>
+
+    <div id="content">
+      <template is="dom-repeat" items="{{groups}}">
+        <div>
+          <h1>{{item.name}}</h1>
+          <template is="dom-repeat" items="{{item.callingsInGroup}}" as="calling" index-as="calling_number">
+            <div id="org" class="card">
+              <h2>{{calling.callingTitle}}</h2>
+                <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
+                  <template is="dom-repeat" items = "{{calling.callingMembers}}" as="member" index-as="member_number">
+                    <li>{{member.preferredName}}</li>
+                  </template>
+                </ul>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    
+  </template>
+
+  <script>
+    Polymer({
+      is: 'calling-planner-org',
+      properties: {
+        groups: {
+          type: Array,
+          notify: true,
+        },
+        orgId: {
+          type: Number,
+        }
+      },
+      created: function() {
+        // console.log('created');
+        let id = this.orgId.path.split('/')[1];
+        this.properties.groups.value = this.getOrganization(json.callings, id);
+      },
+
+      attributeChanged: function() {
+        var id = window.location.pathname.split('/')[2];
+        this.groups = this.getOrganization(json.callings, id);
+        // console.log(this.groups);
+        // this.$.table_template.render();
+      },
+
+
+      getOrganization : (json, id) => {
+        let callingName = null;
+        let callingsInGroupIndex = -1;
+        // const orgId = window.location.pathname.split('/')[2]; 
+        if(!id) return null;
+        let org = json[id].children;
+        // console.log(org)
+
+        if (!org) {
+          org = json[id];
+          this.extractCallingsFromAssignmentsInGroup(null, org);
+          return [org]
+        }
+        else {
+          return appendCallingGroupToObject(org);
+        }
+      },
+
+    }); //end polymer declaration
+
+    function appendCallingGroupToObject(org) {
+      for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
+        extractCallingsFromAssignmentsInGroup(i,org);
+      }
+      return org;
+    }
+
+    function extractCallingsFromAssignmentsInGroup(i, org) {
+
+      // console.log('i',i);
+      // console.log('org',org);
+      // console.log('orgi',org[i]);
+
+      (i || i === 0) ? current_org = org[i] : current_org = org;
+      if (current_org.children) {
+        // console.log("found child")
+        return appendCallingGroupToObject(current_org);
+      }
+
+      // console.log('current_org',current_org);
+      for(let j = 0; j < current_org.assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
+        if(!current_org.callingsInGroup) {
+          current_org.callingsInGroup = [] //initialize or append to array of calling objects
+          callingsInGroupIndex = -1;
+          callingName = 'unreplicable calling name 7878';
+        }
+        if(current_org.assignmentsInGroup[j].positionName === callingName) { //if like the one before
+          try {
+            current_org.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
+          }
+          catch (e) {
+            console.warn(e);
+          }
+          
+        }
+        else {
+          callingName = current_org.assignmentsInGroup[j].positionName;
+          let calling = {};
+          calling['callingTitle'] = current_org.assignmentsInGroup[j].positionName;
+          calling['callingMembers'] = [];
+          calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
+          current_org.callingsInGroup.push(calling)   //add calling object to array
+          callingsInGroupIndex++;
+        }
+        // current_org.assignmentsInGroup[j].person = window.people[current_org.assignmentsInGroup[j].individualId].preferredName;
+      }
+      return null;
+    }
+  </script>
+</dom-module>
