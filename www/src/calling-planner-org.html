@@ -91,7 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
       created: function() {
-        console.log('created');
+        // console.log('created');
         let id = this.orgId.path.split('/')[1];
         this.properties.groups.value = this.getOrganization(json.callings, id);
       },
@@ -99,7 +99,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       attributeChanged: function() {
         var id = window.location.pathname.split('/')[2];
         this.groups = this.getOrganization(json.callings, id);
-        console.log(this.groups);
+        // console.log(this.groups);
         // this.$.table_template.render();
       },
 
@@ -110,7 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // const orgId = window.location.pathname.split('/')[2]; 
         if(!id) return null;
         let org = json[id].children;
-        console.log(org)
+        // console.log(org)
 
         if (!org) {
           org = json[id];
@@ -139,7 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       (i || i === 0) ? current_org = org[i] : current_org = org;
       if (current_org.children) {
-        console.log("found child")
+        // console.log("found child")
         return appendCallingGroupToObject(current_org);
       }
 
@@ -155,7 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             current_org.callingsInGroup[callingsInGroupIndex]['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
           }
           catch (e) {
-            //pass
+            console.warn(e);
           }
           
         }

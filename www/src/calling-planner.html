@@ -177,12 +177,8 @@
 
       _routeChanged: function(changeRecord) {
         if(changeRecord.value.path && changeRecord.value.path.includes('org')) {
-          console.log('VALUE:  ', changeRecord.value.path);
+          // console.log('VALUE:  ', changeRecord.value.path);
           // console.log(document)
-          var first;
-          first = document.getElementsByTagName('calling-planner')[0].shadowRoot;
-          // console.log(first);
-          // console.log(first.getElementsByTagName('app-header-layout')[0].shadowRoot.getElementsByTagName('app-header-layout').shadowRoot.getElementsByTagName('iron-pages').shadowRoot.getElementsByTagName('calling-planner-org'));
         }
       },
 
