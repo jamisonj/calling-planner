@@ -87,11 +87,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true,
         },
         orgId: {
-          type: Number,
+          type: String,
         }
       },
       created: function() {
-        // console.log('created');
+        console.log(this.orgId);
         let id = this.orgId.path.split('/')[1];
         this.properties.groups.value = this.getOrganization(json.callings, id);
       },

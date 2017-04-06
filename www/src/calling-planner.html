@@ -106,6 +106,7 @@
           <template is="dom-repeat" items={{names}}>
             <li><span class="handle">::</span> {{item.name}} <span class="remove">X</span></li>
           </template>
+              <div>{{stringify(subroute)}}</div>
         </ul>
       </app-drawer>
 
@@ -134,13 +135,13 @@
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <calling-planner-brainstorm name="brainstorm"></calling-planner-brainstorm>
+          <calling-planner-brainstorm name="brainstorm" route="{{subroute}}"></calling-planner-brainstorm>
           <calling-planner-staging name="staging"></calling-planner-staging>
           <calling-planner-final name="final"></calling-planner-final>
           <calling-planner-login storedUser="{{this.storedUser.username}}" name="login"></calling-planner-login>
           <calling-planner-register name="register"></calling-planner-register>
           <calling-planner-logout name="logout"></calling-planner-logout>
-          <calling-planner-org name="org" org-id="{{subroute}}"></calling-planner-org>
+          <!-- <calling-planner-org name="org" org-id="{{subroute}}"></calling-planner-org> -->
           <calling-planner-view404 name="view404"></calling-planner-view404>
         </iron-pages>
       </app-header-layout>
@@ -148,6 +149,8 @@
   </template>
 
   <script src="../bower_components/Sortable/Sortable.js"></script>
+
+
 
   <script>
     Polymer({
@@ -186,6 +189,10 @@
 
       testUser: function () {
         console.log(arguments);
+      },
+
+      stringify: function(obj) {
+        return JSON.stringify(obj);
       },
 
       ready: function () {

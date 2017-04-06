@@ -46,26 +46,26 @@ app.get('/api/*', function(req, res) {
 });
 
 // This page can only be hit if the user is authenticated.
-app.get('/brainstorm', function(req, res) {
-    if (!req.user) return res.sendStatus(401);
-    res.sendFile('www/index.html', {root: '.'});
-});
+// app.get('/brainstorm', function(req, res) {
+//     if (!req.user) return res.sendStatus(401);
+//     res.sendFile('www/index.html', {root: '.'});
+// });
 
-// This page can only be hit if the user is authenticated.
-app.get('/staging', function(req, res) {
-    if (!req.user) return res.sendStatus(401);
-    res.sendFile('www/index.html', {root: '.'});
-});
+// // This page can only be hit if the user is authenticated.
+// app.get('/staging', function(req, res) {
+//     if (!req.user) return res.sendStatus(401);
+//     res.sendFile('www/index.html', {root: '.'});
+// });
 
-// This page can only be hit if the user is authenticated.
-app.get('/final', function(req, res) {
-    if (!req.user) return res.sendStatus(401);
-    res.sendFile('www/index.html', {root: '.'});
-});
+// // This page can only be hit if the user is authenticated.
+// app.get('/final', function(req, res) {
+//     if (!req.user) return res.sendStatus(401);
+//     res.sendFile('www/index.html', {root: '.'});
+// });
 
-app.get('/login', function(req, res) {
-    res.sendFile('www/index.html', {root: '.'});
-});
+// app.get('/login', function(req, res) {
+//     res.sendFile('www/index.html', {root: '.'});
+// });
 
 app.post('/api/register', passport.authenticate('local'), function(req, res) {
     if (data[req.user.username]) {
@@ -98,10 +98,10 @@ app.delete('/api/logout', function(req, res) {
     res.status(200).send("User has logged out."); 
 });
 
-// app.get('/', function(req, res) {
-// 	console.log(req.path);
-// 	res.sendFile('www/index.html', {root: '.'}); // Send the index file if no subdirectory specified.
-// });
+app.get('*', function(req, res) {
+	console.log(req.path);
+	res.sendFile('www/index.html', {root: '.'}); // Send the index file if no subdirectory specified.
+});
 
 app.listen(3000, function () {
   console.log('Calling Planner listening on port 3000!')

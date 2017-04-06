@@ -75,10 +75,11 @@
 
       postLogout: function() {
           // remove user data
-          this.$.registerLogoutAjax.url = './api/logout';
+          this.$.registerLogoutAjax.url = '/api/logout';
           this._setReqBody();
           this.$.registerLogoutAjax.generateRequest();
           this.storedUser = null;
+          this.set('route.path', '/');
       },
 
       handleUserResponse: function(event) {
