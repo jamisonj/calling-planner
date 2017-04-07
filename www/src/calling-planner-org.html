@@ -88,20 +88,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         orgId: {
           type: String,
+          notify: true,
+          reflectToAttribute: true
         }
       },
       created: function() {
         console.log(this.orgId);
-        let id = this.orgId.path.split('/')[1];
+        let id = this.orgId;
         this.properties.groups.value = this.getOrganization(json.callings, id);
       },
 
-      attributeChanged: function() {
-        var id = window.location.pathname.split('/')[2];
-        this.groups = this.getOrganization(json.callings, id);
-        // console.log(this.groups);
-        // this.$.table_template.render();
-      },
+      // attributeChanged: function() {
+      //   var id = window.location.pathname.split('/')[2];
+      //   this.groups = this.getOrganization(json.callings, id);
+      //   // console.log(this.groups);
+      //   // this.$.table_template.render();
+      // },
 
 
       getOrganization : (json, id) => {

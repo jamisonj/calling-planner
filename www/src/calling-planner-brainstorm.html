@@ -66,28 +66,35 @@
         tail="{{subroute}}">
     </app-route>
 
+    <app-route
+        route="{{subroute}}"
+        pattern="/:id"
+        data="{{subrouteData}}">
+    </app-route>
+
     <iron-pages
         selected="[[page]]"
         attr-for-selected="name"
         fallback-selection="view404"
         role="main">
-      <calling-planner-org name="org" org-id="{{stripSlashes(subroute.path)}}"></calling-planner-org>
+      <div name="brainstorm" id="content">
+        <div></div>
+        <template is="dom-repeat" items="{{orgs}}">
+          <a href='/brainstorm/org/{{item.id}}' class="card_link">
+            <div class="card org">
+              <div class="rate-header">{{item.name}}</div>
+              <div class="rate-header">{{item.id}}</div>
+              <div class="rate-image"></div>
+            </div>
+          </a>
+        </template>
+      </div>
+      <calling-planner-org name="org" org-id="[[subrouteData.id]]"></calling-planner-org>
       <calling-planner-view404 name="view404"></calling-planner-view404>
     </iron-pages>
 
-    <div id="content">
-
-    <div>{{stripSlashes(subroute.path)}}</div>
-      <template is="dom-repeat" items="{{orgs}}">
-        <a href='/brainstorm/org/{{item.id}}' class="card_link">
-          <div class="card org">
-            <div class="rate-header">{{item.name}}</div>
-            <div class="rate-header">{{item.id}}</div>
-            <div class="rate-image"></div>
-          </div>
-        </a>
-      </template>
-    </div>
+    <div>{{stringify(subrouteData)}}</div>
+    <div>{{page}}</div>
     
   </template>
 
@@ -118,6 +125,13 @@
 
       properties: {
         storedUser: Object,
+
+        page: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
 
         bishop_items: {
           type: Array,

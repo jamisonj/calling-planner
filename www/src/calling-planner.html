@@ -106,7 +106,6 @@
           <template is="dom-repeat" items={{names}}>
             <li><span class="handle">::</span> {{item.name}} <span class="remove">X</span></li>
           </template>
-              <div>{{stringify(subroute)}}</div>
         </ul>
       </app-drawer>
 
@@ -123,7 +122,7 @@
             </div>
             <a name="login" href="/login" hidden$="{{storedUser.loggedin}}">Login</a>
           </app-toolbar>
-          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation" hidden$="{{!storedUser.loggedin}}">
+          <iron-selector selected="{{page}}" attr-for-selected="name" class="drawer-list" role="navigation" hidden$="{{!storedUser.loggedin}}">
             <a name="brainstorm" href="/brainstorm">Brainstorm Zone</a>
             <a name="staging" href="/staging">Staging Zone</a>
             <a name="final" href="/final" >Final Plan</a>
@@ -138,7 +137,7 @@
           <calling-planner-brainstorm name="brainstorm" route="{{subroute}}"></calling-planner-brainstorm>
           <calling-planner-staging name="staging"></calling-planner-staging>
           <calling-planner-final name="final"></calling-planner-final>
-          <calling-planner-login storedUser="{{this.storedUser.username}}" name="login"></calling-planner-login>
+          <calling-planner-login stored-user="{{this.storedUser.username}}" name="login"></calling-planner-login>
           <calling-planner-register name="register"></calling-planner-register>
           <calling-planner-logout name="logout"></calling-planner-logout>
           <!-- <calling-planner-org name="org" org-id="{{subroute}}"></calling-planner-org> -->
@@ -159,6 +158,7 @@
       properties: {
         page: {
           type: String,
+          notify: true,
           reflectToAttribute: true,
           observer: '_pageChanged',
         },
