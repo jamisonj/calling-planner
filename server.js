@@ -1,8 +1,6 @@
 'use strict';
 
 // include modules
-const MongoClient         = require('mongodb').MongoClient;
-const assert              = require('assert');
 const bodyParser          = require('body-parser');
 const cookieParser        = require('cookie-parser');
 const express             = require('express');
