@@ -15,7 +15,7 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.14.1",
     "express-session": "^1.15.1",
-    "mongodb": "^2.2.24",
+    "mongodb": "^2.2.25",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0"
   }
