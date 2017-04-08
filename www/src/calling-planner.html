@@ -15,6 +15,7 @@
 <link rel="import" href="calling-planner-data.html">
 <link rel="import" href="calling-planner-logout.html">
 <link rel="import" href="calling-planner-icons.html">
+<script src="../js/test_data.js"></script>
 
 <dom-module id="calling-planner">
   <template>
@@ -69,6 +70,10 @@
       .app-header {
         min-height: 104px;
       }
+
+      #drawer {
+        overflow-y: scroll;
+      }
     </style>
 
     <iron-ajax
@@ -102,11 +107,20 @@
       <!-- Drawer content -->
       <app-drawer id="drawer">
         <app-toolbar>Ward List</app-toolbar>
-        <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
-          <template is="dom-repeat" items={{names}}>
-            <li><span class="handle">::</span> {{item.name}} <span class="remove">X</span></li>
+        <p>Unassigned Members</p>
+        <ul class="simple-list" style="background-color: #ffffff ; min-height: 50px;">
+          <template is="dom-repeat" items={{unassigned}}>
+            <li><span class="handle">::</span> {{item.preferredName}}</li>
           </template>
         </ul>
+        <p>Assigned Members</p>
+        <ul class="simple-list" style="background-color: #ffffff ; min-height: 50px;">
+          <template is="dom-repeat" items={{assigned}}>
+            <em>{{item.positionName}}</em>
+            <li><span class="handle">::</span> {{item.preferredName}}</li>
+          </template>
+        </ul>
+        <br/><br/><br/><br/>
       </app-drawer>
 
       <!-- Main content -->
@@ -171,9 +185,15 @@
         //   observer: 'testUser'
         // },
 
-        names: { // This is where the entire ward list of names will go. Current names are placeholders.
+        unassigned: { // This is where the entire ward list of names will go. Current names are placeholders.
           type: Array,
-          value: [{"name": "Bernie Sanders"}, {"name": "Donald Trump"}, {"name": "Neil Gorsuch"}],
+          value: window.unassigned,
+          notify: true,
+          reflectToAttribute: true
+        },
+        assigned: { // This is where the entire ward list of names will go. Current names are placeholders.
+          type: Array,
+          value: window.assigned,
           notify: true,
           reflectToAttribute: true
         }

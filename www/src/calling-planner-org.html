@@ -105,6 +105,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
       getOrganization : (json, id) => {
+        console.log(json[id]);
+        if(json[id].hasRendered) {
+          if(json[id].children) {
+            return json[id].children;
+          }
+          else {
+            return [json[id]];
+          }
+        }
+        else {
+          json[id].hasRendered = true;
+        }
+
         let callingName = null;
         let callingsInGroupIndex = -1;
         // const orgId = window.location.pathname.split('/')[2]; 
@@ -115,10 +128,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!org) {
           org = json[id];
           this.extractCallingsFromAssignmentsInGroup(null, org);
+          console.log(org)
           return [org]
         }
         else {
-          return appendCallingGroupToObject(org);
+          let pizza = appendCallingGroupToObject(org);
+          console.log(pizza);
+          return pizza;
         }
       },
 
