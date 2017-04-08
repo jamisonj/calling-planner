@@ -11,7 +11,7 @@ module.exports = function(dbName) {
 			if (err) console.error(err.stack);
 	  		console.log("Connected successfully to server");
 
-	  		db.close();
+	  		// db.close();
 	});
 }
 

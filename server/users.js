@@ -1,7 +1,7 @@
 module.exports = function (dbPromise) {
     const ctrl = {};
     const collectionPromise = dbPromise
-        .then(db => db.collection('users'));
+        .then(db => db.collection('calling-planner-db'));
 
     ctrl.findByUsername = function(username) {
         return collectionPromise
@@ -25,7 +25,7 @@ module.exports = function (dbPromise) {
                             email: email,
                         }, 
                         function(err, r) {})
-            }
+            });
     }
 
     return ctrl;
