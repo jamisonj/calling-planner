@@ -122,7 +122,7 @@
             </div>
             <a name="login" href="/login" hidden$="{{storedUser.loggedin}}">Login</a>
           </app-toolbar>
-          <iron-selector selected="{{page}}" attr-for-selected="name" class="drawer-list" role="navigation" hidden$="{{!storedUser.loggedin}}">
+          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation" hidden$="{{!storedUser.loggedin}}">
             <a name="brainstorm" href="/brainstorm">Brainstorm Zone</a>
             <a name="staging" href="/staging">Staging Zone</a>
             <a name="final" href="/final" >Final Plan</a>

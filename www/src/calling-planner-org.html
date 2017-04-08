@@ -58,6 +58,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div id="content">
+
+      <!-- <iron-selector selected="{{page}}" attr-for-selected="name" class="drawer-list"> -->
+        <a name="brainstorm" href="/brainstorm/">Back to Organizations</a>
+      <!-- </iron-selector> -->
+
       <template is="dom-repeat" items="{{groups}}">
         <div>
           <h1>{{item.name}}</h1>
@@ -92,19 +97,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true
         }
       },
-      created: function() {
-        console.log(this.orgId);
-        let id = this.orgId;
-        this.properties.groups.value = this.getOrganization(json.callings, id);
+
+      attributeChanged: function() {
+        // var id = window.location.pathname.split('/')[3];
+        var id = this.orgId;
+        this.groups = this.getOrganization(json.callings, id);
+        // console.log(this.groups);
+        // this.$.table_template.render();
       },
-
-      // attributeChanged: function() {
-      //   var id = window.location.pathname.split('/')[2];
-      //   this.groups = this.getOrganization(json.callings, id);
-      //   // console.log(this.groups);
-      //   // this.$.table_template.render();
-      // },
-
 
       getOrganization : (json, id) => {
         let callingName = null;

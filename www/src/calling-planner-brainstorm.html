@@ -78,9 +78,8 @@
         fallback-selection="view404"
         role="main">
       <div name="brainstorm" id="content">
-        <div></div>
         <template is="dom-repeat" items="{{orgs}}">
-          <a href='/brainstorm/org/{{item.id}}' class="card_link">
+          <a href='/brainstorm/org/{{item.id}}' class="card_link" onclick="window.location.reload">
             <div class="card org">
               <div class="rate-header">{{item.name}}</div>
               <div class="rate-header">{{item.id}}</div>
@@ -89,7 +88,7 @@
           </a>
         </template>
       </div>
-      <calling-planner-org name="org" org-id="[[subrouteData.id]]"></calling-planner-org>
+      <calling-planner-org name="org" org-id="[[orgId]]"></calling-planner-org>
       <calling-planner-view404 name="view404"></calling-planner-view404>
     </iron-pages>
 
@@ -156,11 +155,14 @@
           value: getOrganizations(window.json),
           notify: true,
           reflectToAttribute: true
-        }
+        },
+
+        orgId: String,
       },
 
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_routePageChanged(routeData.page)',
+        'setId(subrouteData.id)'
       ],
 
       stripSlashes: function(str) {
@@ -172,9 +174,20 @@
         return JSON.stringify(obj);
       },
 
+      setId(id) {
+        console.log(id);
+        this.orgId = id;
+        // console.log(this.orgId);
+      },
+
       _routePageChanged: function(page) {
         this.page = page || 'brainstorm';
         console.log(page);
+        // console.log(id);
+
+        // if (this.page !== 'brainstorm') {
+        //   this.
+        // }
       },
 
       _pageChanged: function(page) {
