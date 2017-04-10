@@ -114,22 +114,21 @@
       handleUserResponse: function(event) {
         var response = event.detail.response;
 
-        console.log(response);
-
-        if (response) {
+        if (response.success) {
+            console.log(response);
             this.error = '';
-
             this.storedUser = {
-                username: response.username,
-                loggedin: true
+                username: response.user.username,
+                loggedin: true,
+                notify: true
             };
             
             this.set('route.path', '/brainstorm');
         }
+        else {
+            this.error = response.message;
+        }
 
-        console.log(this.storedUser);
-
-        // reset form data
         this.formData = {};
       },
 

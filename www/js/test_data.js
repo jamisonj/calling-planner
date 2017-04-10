@@ -2,6 +2,7 @@ window.json = {"unitNo":445088,"orgName":"Lehi 30th Ward","orgTypeId":7,"househo
 
 var people = {};
 var families = window.json.households;
+
 for(let i = 0; i < families.length; i++) {
 	people[families[i].headOfHouseIndividualId] = families[i].headOfHouse;
 	try {
@@ -12,6 +13,7 @@ for(let i = 0; i < families.length; i++) {
 
 	try {
 		for(let j = 0; j < families[i].children.length; j++) {
+			families[i].children[j].isChild = true;
 			people[families[i].children[j].individualId] = families[i].children[j]
 		}
 	} catch(e) {
@@ -19,4 +21,78 @@ for(let i = 0; i < families.length; i++) {
 	}
 }
 
-window.members = people;
+window.people = people;
+// console.log(people);
+
+// add callings to people
+let orgs = window.json.callings;
+// console.log(orgs)
+
+// window.orgs = {};
+let callings = [];
+orgs.forEach((org) => {
+	// parentOrg = {}
+	// orgCallings = [];
+	if(org.children) {
+		org.children.forEach((child) => {
+			let calls = getPeopleFromAssignments(child.assignmentsInGroup);
+			callings.push(calls);
+			// orgCallings.push(calls)
+		});
+	}
+	else {
+		let calls = getPeopleFromAssignments(org.assignmentsInGroup);
+		callings.push(calls);
+		// orgCallings.push(calls);
+	}
+
+})
+
+// console.log(callings);
+
+callings.forEach((type) => {
+	if(type !== -1) {
+		type.forEach((person)=> {
+			if(!window.people[person.individualId]) {}
+			else {
+				window.people[person.individualId].positionName = person.positionName;
+				window.people[person.individualId].positionTypeId = person.positionTypeId;
+				window.people[person.individualId].dateActivated = person.dateActivated;
+				window.people[person.individualId].setApartFlg = person.setApartFlg;
+				window.people[person.individualId].hasPosition = true;
+			}	
+		});
+	}
+})
+
+// console.log(window.people);
+window.unassigned = [];
+window.assigned = [];
+window.wardChildren = [];
+
+for(let key in window.people) {
+	if (window.people[key].hasPosition) {
+		window.assigned.push(window.people[key]);
+	}
+	else {
+		if (window.people[key].isChild) {
+			window.wardChildren.push(window.people[key])
+		}
+		else {
+			window.unassigned.push(window.people[key]);
+		}
+	}
+}
+
+// console.log(window.assigned);
+// console.log(window.unassigned);
+// console.log(window.wardChildren);
+
+function getPeopleFromAssignments(assignmentsInGroup) {
+	if (!assignmentsInGroup) { return -1 }
+	let assignments = []
+	assignmentsInGroup.forEach((assignment) => {
+		assignments.push(assignment);
+	})
+	return assignments;
+}
