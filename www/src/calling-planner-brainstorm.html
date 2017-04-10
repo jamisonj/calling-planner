@@ -101,27 +101,6 @@
     Polymer({
       is: 'calling-planner-brainstorm',
 
-      ready: function () {
-
-        // var node = this.$$('.simple-list');
-        var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
-
-        elements.forEach(function (element) {
-          Sortable.create(element, {
-            // handle: ".handle", 
-            group: "brainstorm",
-            filter: ".remove",
-            onFilter: function (e) {
-              var item = e.item;
-              console.log(item);
-              if (typeof item !== "undefined") {
-                item.parentNode.removeChild(item);
-              }
-            }
-          });
-        });
-      },
-
       properties: {
         storedUser: Object,
 
@@ -166,7 +145,6 @@
       ],
 
       stripSlashes: function(str) {
-        console.log(str.split('/')[1]);
         return str.split('/')[1];
       },
 
@@ -175,19 +153,12 @@
       },
 
       setId(id) {
-        console.log(id);
         this.orgId = id;
-        // console.log(this.orgId);
       },
 
       _routePageChanged: function(page) {
         this.page = page || 'brainstorm';
         console.log(page);
-        // console.log(id);
-
-        // if (this.page !== 'brainstorm') {
-        //   this.
-        // }
       },
 
       _pageChanged: function(page) {

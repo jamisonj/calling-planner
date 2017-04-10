@@ -52,9 +52,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         -webkit-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
         -moz-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
       }
+
       .card_link {
         text-decoration: none;
       }
+
+      .simple-list {
+        background-color: #eee; 
+        min-height: 50px;
+        padding-left: 0;
+      }
+
+      .simple-list li {
+        list-style-type: none;
+        margin-left: 10px;
+      }
+
+      .simple-list .handle {
+        cursor: move;
+      }
+
+      .simple-list .remove {
+        cursor: pointer;
+      }
+
     </style>
 
     <div id="content">
@@ -69,9 +90,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template is="dom-repeat" items="{{item.callingsInGroup}}" as="calling" index-as="calling_number">
             <div id="org" class="card">
               <h2>{{calling.callingTitle}}</h2>
-                <ul class="simple-list" style="background-color: #eee; min-height: 50px;">
+                <ul class="simple-list">
                   <template is="dom-repeat" items = "{{calling.callingMembers}}" as="member" index-as="member_number">
-                    <li>{{member.preferredName}}</li>
+                    <li><span class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
                   </template>
                 </ul>
             </div>
@@ -80,30 +101,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </div>
 
+    <!-- <script src="../bower_components/Sortable/Sortable.js"></script> -->
     
   </template>
 
   <script>
+
     Polymer({
       is: 'calling-planner-org',
       properties: {
         groups: {
           type: Array,
           notify: true,
+          observer: 'arrayChanged'
         },
         orgId: {
           type: String,
           notify: true,
-          reflectToAttribute: true
+          reflectToAttribute: true,
+          observer: 'idChanged'
         }
       },
 
-      attributeChanged: function() {
-        // var id = window.location.pathname.split('/')[3];
-        var id = this.orgId;
-        this.groups = this.getOrganization(json.callings, id);
+      attached: function() {
+        console.log(this.$);
+
+        // var id = this.orgId;
+        // this.groups = this.getOrganization(json.callings, id);
         // console.log(this.groups);
         // this.$.table_template.render();
+      },
+
+      idChanged: function() {
+        var id = this.orgId;
+        this.groups = this.getOrganization(json.callings, id);
+      },
+
+      arrayChanged: function () {
+        var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
+
+        elements.forEach(function (element) {
+
+          console.log(element);
+
+          Sortable.create(element, {
+            // handle: ".handle", 
+            group: "brainstorm",
+            filter: ".remove",
+            onFilter: function (e) {
+              var item = e.item;
+              if (item.parentNode !== null) {
+                item.parentNode.removeChild(item);
+              }
+            }
+          });
+        });
       },
 
       getOrganization : (json, id) => {
@@ -166,13 +218,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           let calling = {};
           calling['callingTitle'] = current_org.assignmentsInGroup[j].positionName;
           calling['callingMembers'] = [];
-          calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId])
-          current_org.callingsInGroup.push(calling)   //add calling object to array
+          calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId]);
+          current_org.callingsInGroup.push(calling);   //add calling object to array
           callingsInGroupIndex++;
         }
         // current_org.assignmentsInGroup[j].person = window.people[current_org.assignmentsInGroup[j].individualId].preferredName;
       }
       return null;
     }
+
   </script>
 </dom-module>

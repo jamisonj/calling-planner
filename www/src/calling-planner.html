@@ -149,8 +149,6 @@
 
   <script src="../bower_components/Sortable/Sortable.js"></script>
 
-
-
   <script>
     Polymer({
       is: 'calling-planner',
@@ -196,14 +194,7 @@
       },
 
       ready: function () {
-        // this.$.checkLoginAjax.generateRequest();
-
         var component = this;
-
-        // setInterval(function() {
-        //   console.log(component.activeUser);
-        // }, 2000);
-
         var element = Polymer.dom(this.root).querySelector('.simple-list');
 
         Sortable.create(element, {
