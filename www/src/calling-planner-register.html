@@ -121,10 +121,10 @@
         response = JSON.parse(response);
 
         if (response.success) {
+            console.log(response);
             this.error = '';
-            var user = JSON.parse(response);
             this.storedUser = {
-                username: user.username,
+                username: response.user.username,
                 loggedin: true,
                 notify: true
             };
