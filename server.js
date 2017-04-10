@@ -8,6 +8,7 @@ const LocalStrategy       = require('passport-local').Strategy;
 const passport            = require('passport');
 const session             = require('express-session');
 const mongoose            = require('mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
 
 const app = express();
 var data = {};
@@ -25,11 +26,11 @@ passport.use(new LocalStrategy(function(username, password, done) {
       }
 
       if (!user) {
-        return done(null, false);
+        return done(null, false, { message: 'Incorrect username.' });
       }
 
       if (user.password != password) {
-        return done(null, false);
+        return done(null, false, { message: 'Incorrect password.' });
       }
 
       return done(null, user);
@@ -54,6 +55,7 @@ app.use(passport.session());
 app.use(express.static('www'));
 
 //mongoose user model ---------------------------------------------------------------
+mongoose.Promise = Promise;
 
 mongoose.connect('mongodb://localhost/MyDatabase');
 
@@ -64,6 +66,9 @@ var UserDetail = new Schema({
     }, {
       collection: 'userInfo'
     });
+
+UserDetail.plugin(passportLocalMongoose);
+
 var UserDetails = mongoose.model('userInfo', UserDetail);
 
 //routes -------------------------------------------------------------------------
@@ -100,25 +105,59 @@ app.get('/login', function(req, res) {
     res.sendFile('www/index.html', {root: '.'});
 });
 
-app.post('/api/register', passport.authenticate('local'), function(req, res) {
-    if (data[req.user.username]) {
-        res.sendStatus(401).send('This username is already registered.');
-    }
+app.get('/register', function(req, res) {
+    res.sendFile('www/index.html', {root: '.'});
+});
 
-    else {
-        data[req.user.username] = req.user;
-    }
-
-    res.send(data[req.user.username]);
+app.post('/api/register', function(req, res, next) {
+    UserDetails.register(new UserDetails({ username : req.body.username }), req.body.password, function(err, account) {
+        if (err) {
+          return res.send(err);
+          // return res.render('register', { error : err.message });
+        }
+        else {
+            UserDetails.authenticate()(req.body.username, req.body.password, function (err, user, options) {
+                if (err) return next(err);
+                if (user === false) {
+                    res.send({
+                        message: options.message,
+                        success: false
+                    });
+                } else {
+                    req.login(user, function (err) {
+                        res.send({
+                            success: true,
+                            user: user
+                        });
+                    });
+                }
+            });
+        }
+    });
 });
 
 // Login URL.
 app.post('/api/login', function(req, res, next ){
-    passport.authenticate('local', function(err, user, info) {
-      if (err) { return next(err) }
-      if (!user) { return res.json( { message: "Incorrect credentials" }) }
-      res.json(user);
-    })(req, res, next);   
+    UserDetails.authenticate()(req.body.username, req.body.password, function (err, user, options) {
+        if (err) return next(err);
+        if (user === false) {
+            res.send({
+                message: options.message,
+                success: false
+            });
+        } else {
+            req.login(user, function (err) {
+                res.send({
+                    success: true,
+                    user: user
+                });
+            });
+        }
+    });   
+});
+
+app.post('/api/login', passport.authenticate('local'), function(req, res) {
+    res.redirect('/brainstorm');
 });
 
 // Logout URL.

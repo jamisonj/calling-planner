@@ -39,6 +39,7 @@
 
     <iron-ajax
       id="registerAjax"
+      with-credentials = "true"
       method="post"
       content-type="application/json"
       handle-as="text"
@@ -109,15 +110,17 @@
 
       postRegister: function() {
         console.log("postRegister");
-        this.$.registerAjax.url = './api/register';
-        this._setReqBody();
+        this.$.registerAjax.url = '/api/register';
+        this._setReqBody(this.$);
         this.$.registerAjax.generateRequest();
       },
 
       handleUserResponse: function(event) {
         var response = event.detail.response;
 
-        if (response) {
+        response = JSON.parse(response);
+
+        if (response.success) {
             this.error = '';
             var user = JSON.parse(response);
             this.storedUser = {
@@ -126,8 +129,11 @@
                 notify: true
             };
             
-            //TODO: Set up redirecting.
-            this.set('route.path', '/login');
+            this.set('route.path', '/brainstorm');
+        }
+        else {
+          console.log(response.message);
+          this.error = response.message;
         }
 
         // reset form data
@@ -135,7 +141,8 @@
       },
 
       handleUserError: function(event) {
-          this.error = event.detail.request.xhr.response;
+        console.log(event);
+        this.error = event.detail.request.xhr.response;
       }
 
     });
