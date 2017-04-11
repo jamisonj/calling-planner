@@ -98,6 +98,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
           </template>
         </div>
+        <template is="dom-if" if="[[isEqual(index, groups.length)]]">
+        <span foo="[[arrayChanged()]]">last one = [[index]]</span></template>
       </template>
     </div>
 
@@ -123,13 +125,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      attached: function() {
-        console.log(this.$);
-
-        // var id = this.orgId;
-        // this.groups = this.getOrganization(json.callings, id);
-        // console.log(this.groups);
-        // this.$.table_template.render();
+      // Check if we are loading the last list element.
+      isEqual: function (v1, v2) {
+        console.log(v1 === v2-1);
+        return v1 === (v2-1);
       },
 
       idChanged: function() {

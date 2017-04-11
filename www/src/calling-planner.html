@@ -110,14 +110,14 @@
         <p>Unassigned Members</p>
         <ul class="simple-list" style="background-color: #ffffff ; min-height: 50px;">
           <template is="dom-repeat" items={{unassigned}}>
-            <li><span class="handle">::</span> {{item.preferredName}}</li>
+            <li><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
           </template>
         </ul>
         <p>Assigned Members</p>
         <ul class="simple-list" style="background-color: #ffffff ; min-height: 50px;">
           <template is="dom-repeat" items={{assigned}}>
             <em>{{item.positionName}}</em>
-            <li><span class="handle">::</span> {{item.preferredName}}</li>
+            <li><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
           </template>
         </ul>
         <br/><br/><br/><br/>
