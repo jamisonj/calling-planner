@@ -26,7 +26,7 @@ window.people = people;
 
 // add callings to people
 let orgs = window.json.callings;
-// console.log(orgs)
+console.log(orgs)
 
 // window.orgs = {};
 let callings = [];
