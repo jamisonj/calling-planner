@@ -12,23 +12,31 @@
       }
     </style>
 
-    <!-- Allows us to share this data with this custom element. -->
-    <!-- <app-data key="userData" data="{{storedUser}}"></app-data> -->
-
-    <div class="card">
-      <div class="circle">2</div>
-      <h1>View Two</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
-    </div>
+    <p>Unassigned Members</p>
+    <template is="dom-repeat" items="{{changes}}" as="change">
+      <div class="card">
+          <p> <b>{{change.member.preferredName}}</b> <em>{{change.calling.positionName}}</em> </p>
+      </div>
+    </template>
   </template>
 
   <script>
     Polymer({
       is: 'calling-planner-staging',
       properties: {
-        storedUser: Object
-      }
+        storedUser: Object,
+        changes: {
+          type: Array,
+          notify: true,
+          observer: 'stagedChange',
+          value: window.staged
+        },
+      },
+      stagedChange: function() {
+        console.log('changed');
+        console.log(this.changes)
+        // this.changes = window.staged;
+      },
     });
   </script>
 </dom-module>
