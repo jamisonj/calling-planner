@@ -100,7 +100,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </template>
         </div>
         <template is="dom-if" if="[[isEqual(index, groups.length)]]">
-        <span foo="[[arrayChanged()]]">last one = [[index]]</span></template>
+          <span foo="[[arrayChanged()]]"></span>
+        </template>
       </template>
     </div>
 
@@ -141,8 +142,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
 
         elements.forEach(function (element) {
-
-          // console.log(element);
 
           Sortable.create(element, {
             // handle: ".handle", 
@@ -228,7 +227,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (!org) {
           org = json[id];
           this.extractCallingsFromAssignmentsInGroup(null, org);
-          console.log(org)
+          // console.log(org);
           return [org]
         }
         else {

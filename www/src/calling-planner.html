@@ -59,6 +59,8 @@
 
       .simple-list {
         padding-left: 10px;
+        background-color: #eee;
+        min-height: 50px;
       }
 
       .simple-list li {
@@ -77,7 +79,7 @@
       }
     </style>
 
-    <iron-ajax
+<!--     <iron-ajax
       auto
       id="checkLoginAjax"
       method="get"
@@ -86,7 +88,9 @@
       url="http://localhost:3000/api/auth"
       on-response="handleSessionResponse"
       on-error="handleSessionError">
-    </iron-ajax>
+    </iron-ajax> -->
+
+    <iron-localstorage name="user-storage" value="{{storedUser}}"></iron-localstorage>
 
     <!-- Allows us to share login data with this custom element. -->
     <app-data key="userData" data="{{storedUser}}"></app-data>
@@ -109,13 +113,13 @@
       <app-drawer id="drawer">
         <app-toolbar>Ward List</app-toolbar>
         <p>Unassigned Members</p>
-        <ul class="simple-list" style="background-color: #ffffff ; min-height: 50px;">
+        <ul class="simple-list">
           <template is="dom-repeat" items={{unassigned}}>
             <li><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}}  <span class="remove">X</span></li>
           </template>
         </ul>
         <p>Assigned Members</p>
-        <ul class="simple-list" style="background-color: #ffffff ; min-height: 50px;">
+        <ul class="simple-list">
           <template is="dom-repeat" items={{assigned}}>
             <em>{{item.positionName}}</em>
             <li><span id="{{item.individualId}}"></span><span class="hidden"></span><span class="handle">::</span> {{item.preferredName}}  <span class="remove">X</span></li>
@@ -204,7 +208,6 @@
       ],
 
       testUser: function () {
-        // console.log(arguments);
       },
 
       stringify: function(obj) {
@@ -212,18 +215,24 @@
       },
 
       ready: function () {
-        var component = this;
-        var element = Polymer.dom(this.root).querySelector('.simple-list');
+        // var elements = Polymer.dom(this.root).querySelector('.simple-list');
+        var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
 
-        Sortable.create(element, {
-          // handle: ".handle", 
-          group: {
-            name: "brainstorm", 
-            pull: "clone", 
-            put: false
-          },
-          sort: false
+        console.log(elements);
+
+        elements.forEach(function (element) {
+
+          Sortable.create(element, {
+            // handle: ".handle", 
+            group: {
+              name: "brainstorm", 
+              pull: "clone", 
+              put: false
+            },
+            sort: false
+          });
         });
+        
       },
 
       handleSessionResponse: function(event) {
