@@ -73,6 +73,7 @@
 
       #drawer {
         overflow-y: scroll;
+        overflow-x: hidden;
       }
     </style>
 
@@ -110,14 +111,14 @@
         <p>Unassigned Members</p>
         <ul class="simple-list" style="background-color: #ffffff ; min-height: 50px;">
           <template is="dom-repeat" items={{unassigned}}>
-            <li><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+            <li><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}}  <span class="remove">X</span></li>
           </template>
         </ul>
         <p>Assigned Members</p>
         <ul class="simple-list" style="background-color: #ffffff ; min-height: 50px;">
           <template is="dom-repeat" items={{assigned}}>
             <em>{{item.positionName}}</em>
-            <li><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+            <li><span id="{{item.individualId}}"></span><span class="hidden"></span><span class="handle">::</span> {{item.preferredName}}  <span class="remove">X</span></li>
           </template>
         </ul>
         <br/><br/><br/><br/>
@@ -171,7 +172,6 @@
         page: {
           type: String,
           notify: true,
-          reflectToAttribute: true,
           observer: '_pageChanged',
         },
 
@@ -190,13 +190,11 @@
           type: Array,
           value: window.unassigned,
           notify: true,
-          reflectToAttribute: true
         },
         assigned: { // This is where the entire ward list of names will go. Current names are placeholders.
           type: Array,
           value: window.assigned,
           notify: true,
-          reflectToAttribute: true
         }
       },
 

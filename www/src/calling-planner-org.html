@@ -61,6 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: #eee; 
         min-height: 50px;
         padding-left: 0;
+        cursor: move;
       }
 
       .simple-list li {
@@ -86,13 +87,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <template is="dom-repeat" items="{{groups}}">
         <div>
-          <h1>{{item.name}}</h1>
+          <h1 id="{{item.orgTypeId}}">{{item.name}}</h1>
           <template is="dom-repeat" items="{{item.callingsInGroup}}" as="calling" index-as="calling_number">
             <div id="org" class="card">
-              <h2>{{calling.callingTitle}}</h2>
+              <h2 id="{{calling.callingTypeId}}">{{calling.callingTitle}}</h2>
                 <ul class="simple-list">
                   <template is="dom-repeat" items = "{{calling.callingMembers}}" as="member" index-as="member_number">
-                    <li><span class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
+                    <li><span id="{{member.individualId}}"></span><span class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
                   </template>
                 </ul>
             </div>
@@ -141,17 +142,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         elements.forEach(function (element) {
 
-          console.log(element);
+          // console.log(element);
 
           Sortable.create(element, {
             // handle: ".handle", 
             group: "brainstorm",
             filter: ".remove",
+            sort: true,
             onFilter: function (e) {
+              console.log('deleted', e);
+
+              var index = e.item.children[1].id;
+              window.staged.splice(index,1);
+              console.log(window.staged)
+
               var item = e.item;
               if (item.parentNode !== null) {
                 item.parentNode.removeChild(item);
               }
+            },
+            onUpdate: function (evt) {
+              console.log('updated', evt);
+            },
+            onAdd: function (evt) {
+              console.log('added', evt);
+              // console.log(window.callings[evt.item.parentNode.parentNode.children[0].id])
+              var stage_member = {
+                member: window.people[evt.item.firstChild.id],
+                calling: window.callings[evt.item.parentNode.parentNode.children[0].id]
+              };
+              evt.item.children[1].id = window.staged.length - 1;
+              window.staged.push(stage_member)
+              console.log(window.staged)
+            },
+            onRemove: function (evt) {
+              console.log('removed', evt);
+              var path = window.location.pathname.split('/');
+
+              // var id = path[path.length-1];
+              var index = evt.item.children[1].id;
+              // console.log(index)
+
+              window.staged.splice(index,1);
+              console.log(window.staged)
             }
           });
         });
@@ -232,6 +265,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           callingName = current_org.assignmentsInGroup[j].positionName;
           let calling = {};
           calling['callingTitle'] = current_org.assignmentsInGroup[j].positionName;
+          calling['callingTypeId'] = current_org.assignmentsInGroup[j].positionTypeId;
           calling['callingMembers'] = [];
           calling['callingMembers'].push(window.people[current_org.assignmentsInGroup[j].individualId]);
           current_org.callingsInGroup.push(calling);   //add calling object to array
