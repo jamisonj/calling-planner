@@ -15,7 +15,7 @@
     <p>Unassigned Members</p>
     <template is="dom-repeat" items="{{changes}}" as="change">
       <div class="card">
-          <p> <b>{{change.member.preferredName}}</b> <em>{{change.calling.positionName}}</em> </p>
+          <p> <b>{{change.member.preferredName}}</b> - <em>{{change.calling.positionName}}</em> </p>
       </div>
     </template>
   </template>
@@ -37,6 +37,9 @@
         console.log(this.changes)
         // this.changes = window.staged;
       },
+      attached: function() {
+        console.log('attached');
+      }
     });
   </script>
 </dom-module>
