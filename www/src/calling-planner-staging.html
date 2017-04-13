@@ -13,9 +13,10 @@
     </style>
 
     <p>Unassigned Members</p>
-    <template is="dom-repeat" items="{{changes}}" as="change">
+    <template id="repeat" is="dom-repeat" items="[[changes]]" as="change" indexAs="index">
       <div class="card">
-          <p> <b>{{change.member.preferredName}}</b> - <em>{{change.calling.positionName}}</em> </p>
+          <p id="card_counter"> <b>{{change.member.preferredName}}</b> - <em>{{change.calling.positionName}}</em> </p>
+          <p> <b>{{change}}</b> [[index]] </p>
       </div>
     </template>
   </template>
@@ -24,22 +25,21 @@
     Polymer({
       is: 'calling-planner-staging',
       properties: {
-        storedUser: Object,
         changes: {
           type: Array,
           notify: true,
-          observer: 'stagedChange',
           value: window.staged
         },
       },
-      stagedChange: function() {
-        console.log('changed');
+      attributeChanged: function() {
+        console.log('attr changed');
+        console.log(window.staged.length)
+        for(var i =0; i < window.staged.length; i++) {
+          (window.staged[i] !== -1) ? this.push('changes', window.staged[i]) : this.splice('changes', i, 1);
+        }
+        window.staged = [];
         console.log(this.changes)
-        // this.changes = window.staged;
       },
-      attached: function() {
-        console.log('attached');
-      }
     });
   </script>
 </dom-module>
