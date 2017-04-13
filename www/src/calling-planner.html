@@ -31,6 +31,7 @@
         color: #fff;
         background-color: var(--app-primary-color);
       }
+
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
@@ -58,7 +59,7 @@
       }*/
 
       .simple-list {
-        padding-left: 10px;
+        padding-left: 20px;
         background-color: #eee;
         min-height: 50px;
       }
@@ -74,8 +75,17 @@
       }
 
       #drawer {
-        overflow-y: scroll;
+        overflow-y: auto;
+        /*overflow-x: ;*/
+        top: 0px;
+        bottom: 0px;
+        --app-drawer-width: 300px;
+        --app-drawer-content-container: {
+          padding: 0;
+        }
       }
+
+      
     </style>
 
 <!--     <iron-ajax
@@ -110,8 +120,8 @@
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer id="drawer">
-        <app-toolbar>Ward List</app-toolbar>
-        <p>Unassigned Members</p>
+        <app-toolbar><h1>Ward List</h1></app-toolbar>
+        <h2>Unassigned Members</h2>
         <ul class="simple-list">
           <template is="dom-repeat" items={{unassigned}}>
             <li><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
