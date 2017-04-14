@@ -76,6 +76,7 @@ window.staged = [];
 window.stagedObj = {};
 window.released = [];
 window.releasedObj = {};
+window.final = {};
 
 for(let key in window.people) {
 	if (window.people[key].hasPosition) {

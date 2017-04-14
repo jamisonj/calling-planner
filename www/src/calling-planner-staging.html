@@ -16,14 +16,14 @@
     <p>Proposed Calls</p>
     <template id="repeat" is="dom-repeat" items="[[changes]]" as="change" indexAs="index">
       <div class="card">
-          <p id="card_counter"> <b>{{change.member.preferredName}}</b> - <em>{{change.calling.positionName}}</em> <iron-icon icon="icons:check-circle"></iron-icon> <iron-icon icon="icons:cancel"></iron-icon> </p>
+          <p id="card_counter"> <b>{{change.member.preferredName}}</b> - <em>{{change.calling.positionName}}</em> <iron-icon icon="icons:check-circle" on-tap="addCalling"></iron-icon> <iron-icon icon="icons:cancel" on-tap="removeCalling"></iron-icon> </p>
       </div>
     </template>
 
     <p>Proposed Releases</p>
     <template id="repeat" is="dom-repeat" items="[[releases]]" as="release" indexAs="r_index">
       <div class="card">
-          <p id="card_counter"> <b>{{release.member.preferredName}}</b> - <em>{{release.calling.positionName}}</em> <iron-icon icon="icons:check-circle"></iron-icon> <iron-icon icon="icons:cancel"></iron-icon></p>
+          <p id="card_counter"> <b>{{release.member.preferredName}}</b> - <em>{{release.calling.positionName}}</em> <iron-icon icon="icons:check-circle" on-tap="addRelease"></iron-icon> <iron-icon icon="icons:cancel" on-tap="removeRelease"></iron-icon></p>
       </div>
     </template>
   </template>
@@ -68,6 +68,26 @@
         }
         window.released = [];
 
+      },
+      addCalling: function (e) {
+        console.log('calling added')
+        console.log(e)
+        e.path[2].style.backgroundColor = '#80CBC4';
+      },
+
+      removeCalling: function (e) {
+        console.log('calling removed')
+        e.path[2].style.backgroundColor = '#EF9A9A';
+      },
+
+      addRelease: function (e) {
+        console.log('release added')
+        e.path[2].style.backgroundColor = '#80CBC4';
+      },
+
+      removeRelease: function (e) {
+        console.log('release removed')
+        e.path[2].style.backgroundColor = '#EF9A9A';
       },
     });
   </script>
