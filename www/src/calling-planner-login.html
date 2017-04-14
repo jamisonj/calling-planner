@@ -14,16 +14,33 @@
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
+        font-family: var(--app-body-font);
+      }
+
+      h1 {
+        font-size: 1.5em;
+        margin: 10px 0;
+        font-family: var(--app-header-font);
+      }
+
+      h2 {
+        font-size: 1.3em;
+        margin: 10px;
+        font-family: var(--app-header-font);
+      }
+
+      a {
+        color: var(--app-secondary-color);
       }
 
       .wrapper-btns {
         margin-top: 15px;
       }
 
-      paper-button.link {
-        color: #757575;
+      paper-button.primary {
+        color: rgb(255, 255, 255);
+        background: var(--app-primary-color, red);
       }
 
       .alert-error {

@@ -11,11 +11,33 @@
 <dom-module id="calling-planner-logout">
   <template>
     <style include="shared-styles">
-            :host {
-                margin: 0;
-                padding: 0;
-            }
-        </style>
+      :host {
+          margin: 0;
+          padding: 0;
+          font-family: var(--app-body-font);
+      }
+
+      h1 {
+        font-size: 1.5em;
+        margin: 10px;
+        font-family: var(--app-header-font);
+      }
+
+      h2 {
+        font-size: 1.3em;
+        margin: 10px;
+        font-family: var(--app-header-font);
+      }
+
+      a {
+        color: rgb(255, 255, 255);
+        font-family: var(--app-header-font);
+      }
+
+      a:hover {
+        color: rgb(200, 200, 200);
+      }
+    </style>
 
     <iron-ajax
       id="registerLogoutAjax"

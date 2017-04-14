@@ -7,26 +7,43 @@
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
+        font-family: var(--app-body-font);
       }
+
       paper-card.rate { @apply(--layout-horizontal); }
+
       .rate-image {
         width: 200px;
         height: 170px;
         background: url('../images/donuts.jpg');
         background-size: cover;
       }
+
       .rate-content {
         @apply(--layout-flex);
         float: left;
       }
-      .rate-header { @apply(--paper-font-headline); }
+
+      .rate-header { 
+        @apply(--paper-font-headline);
+        background-color: var(--app-maroon);
+        color: rgb(255, 255, 255);
+        padding-left: 10px;
+        font-size: 1.3em;
+        font-family: var(--app-header-font);
+      }
+
       .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
       paper-icon-button.rate-icon {
         --iron-icon-fill-color: white;
         --iron-icon-stroke-color: var(--paper-grey-600);
       }
+
+      .card {
+        border-radius: 0;
+      }
+
       .org {
         transition: box-shadow .5s;
         width: 200px;
@@ -41,9 +58,11 @@
         -webkit-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
         -moz-box-shadow:rgba(0, 0, 0, 0.3) 0 16px 16px 0;
       }
+
       .card_link {
         text-decoration: none;
       }
+
       .simple-list {
         padding-left: 10px;
       }
@@ -80,9 +99,9 @@
         <template is="dom-repeat" items="{{orgs}}">
           <a href='/brainstorm/org/{{item.id}}' class="card_link">
             <div class="card org">
-              <div class="rate-header">{{item.name}}</div>
-              <br/>
-              <div class="rate-image"></div>
+             <div class="rate-image"></div>
+              
+               <div class="rate-header">{{item.name}}</div>
             </div>
           </a>
         </template>
