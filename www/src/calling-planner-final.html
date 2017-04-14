@@ -28,6 +28,10 @@
       is: 'calling-planner-final',
       properties: {
         storedUser: Object
+      },
+      attributeChanged: function () {
+        console.log(window.final.callings);
+        console.log(window.final.releases);
       }
     });
   </script>

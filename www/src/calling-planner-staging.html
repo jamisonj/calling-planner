@@ -73,6 +73,12 @@
         console.log('calling added')
         console.log(e)
         e.path[2].style.backgroundColor = '#80CBC4';
+        console.log(e.path[1].children[0])
+        console.log(e.path[1].children[0].innerHTML)
+        window.final['callings'].push({
+          member: e.path[1].children[0].innerHTML,
+          calling: e.path[1].children[1].innerHTML
+        });
       },
 
       removeCalling: function (e) {
@@ -83,6 +89,10 @@
       addRelease: function (e) {
         console.log('release added')
         e.path[2].style.backgroundColor = '#80CBC4';
+        window.final['releases'].push({
+          member: e.path[1].children[0].innerHTML,
+          calling: e.path[1].children[1].innerHTML
+        });
       },
 
       removeRelease: function (e) {
