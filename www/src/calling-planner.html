@@ -116,11 +116,10 @@
       }
 
       #drawer {
-        overflow-y: scroll;
-        overflow-x: hidden;
+        width: 0px;
         top: 0px;
         bottom: 0px;
-        --app-drawer-width: 300px;
+        --app-drawer-width: 0px;
         --app-drawer-content-container: {
           padding: 0;
           position: static;
@@ -178,21 +177,7 @@
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer id="drawer">
-        <app-toolbar class="sidebar-toolbar"><h1 id="first-header">Ward List</h1></app-toolbar>
-        <h2>Unassigned Members</h2>
-        <ul class="full-list">
-          <template is="dom-repeat" items={{unassigned}}>
-            <li class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
-          </template>
-        </ul>
-        <h2>Assigned Members</h2>
-        <ul class="full-list">
-          <template is="dom-repeat" items={{assigned}}>
-            <em>{{item.positionName}}</em>
-            <li class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
-          </template>
-        </ul>
-        <br/><br/><br/><br/>
+        
       </app-drawer>
 
       <!-- Main content -->
@@ -244,12 +229,6 @@
           type: String,
           notify: true,
           observer: '_pageChanged',
-        },
-
-        storedUser: {
-          type: Object, 
-          observer: 'testUser',
-          value: {}
         },
 
         // activeUser: {

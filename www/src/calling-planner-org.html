@@ -115,7 +115,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         cursor: default;
       }
 
+      #drawer {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        top: 110px;
+        width: 20vw;
+        position: fixed;
+        height: 900vh;
+      }
+
+      #content {
+        width: 75vw;
+        top: 120px;
+        right: 0px;
+        position: absolute;
+      }
+
     </style>
+
+  <!-- Drawer content -->
+  <div id="drawer">
+    <h1 id="first-header">Ward List</h1>
+    <h2>Unassigned Members</h2>
+    <ul class$="full-list{{orgId}} full-list">
+      <template is="dom-repeat" items={{unassigned}}>
+        <li class$="member{{orgId}} full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+      </template>
+    </ul>
+    <h2>Assigned Members</h2>
+    <ul class$="full-list{{orgId}} full-list">
+      <template is="dom-repeat" items={{assigned}}>
+        <em>{{item.positionName}}</em>
+        <li class$="member{{orgId}} full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+      </template>
+    </ul>
+  </div>
+
 
     <div id="content">
 
@@ -123,15 +158,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <a name="brainstorm" href="/brainstorm/">Back to Organizations</a>
       <!-- </iron-selector> -->
 
-      <template is="dom-repeat" items="{{groups}}">
+      <template is="dom-repeat" items="{{groups}}" as="group">
         <div>
-          <h1 id="{{item.orgTypeId}}">{{item.name}}</h1>
-          <template is="dom-repeat" items="{{item.callingsInGroup}}" as="calling" index-as="calling_number">
+          <h1 id="{{group.orgTypeId}}">{{group.name}}</h1>
+          <template is="dom-repeat" items="{{group.callingsInGroup}}" as="calling" index-as="calling_number">
             <div id="org" class="card">
               <h2 id="{{calling.callingTypeId}}">{{calling.callingTitle}}</h2>
-                <ul class="simple-list">
+                <ul class$="simple-list{{group.instanceId}} simple-list">
                   <template is="dom-repeat" items ="{{calling.callingMembers}}" as="member" index-as="member_number">
-                    <li class="brainstorm-member"><span id="{{member.individualId}}" class="{{member.positionName}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
+                    <li class$="brainstorm-member{{group.instanceId}} brainstorm-member"><span id="{{member.individualId}}" class="{{member.positionName}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
                   </template>
                 </ul>
             </div>
@@ -162,6 +197,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true,
           reflectToAttribute: true,
           observer: 'idChanged'
+        },
+        unassigned: { // This is where the entire ward list of names will go. Current names are placeholders.
+          type: Array,
+          value: window.unassigned,
+          notify: true,
+        },
+        assigned: { // This is where the entire ward list of names will go. Current names are placeholders.
+          type: Array,
+          value: window.assigned,
+          notify: true,
         }
       },
 
@@ -176,14 +221,87 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.groups = this.getOrganization(json.callings, id);
       },
 
-      arrayChanged: function () {
-        var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
+      ready: function () {
+        console.log('ready')
+        // var elements = Polymer.dom(this.root).querySelector('.full-list');
+        // var elements = Polymer.dom(this.root).querySelectorAll('.full-list');
+        // console.log(elements)
 
-        elements.forEach(function (element) {
+        // var orgIdString = parseInt(this.orgId);
+        // var name = 'ward' + orgIdString;
+        // console.log("ward list name: ", name)
+
+        // elements.forEach(function (element) {
+
+        //   Sortable.create(element, {
+        //     // handle: ".handle", 
+        //     group: {
+        //       name: name, 
+        //       pull: "clone", 
+        //       put: false
+        //     },
+        //     sort: false
+        //   });
+        // });
+        
+      },
+
+      arrayChanged: function () {
+        console.log('changed called')
+
+        var simple_list = Polymer.dom(this.root).lastElementChild.children;
+
+        var orgMembers = [];
+        for(var i = 0; i < simple_list.length; i++) {
+          if (simple_list[i].localName === 'div') {
+            orgMembers.push(simple_list[i].children.org.children[1]);
+          }
+        }
+
+        var full_list = Polymer.dom(this.root).node.children.drawer.children;
+        console.log(full_list);
+
+        var wardList = [full_list[2],full_list[4]];
+        console.log("WARD", wardList)
+
+        var orgIdString = parseInt(this.orgId);
+        var simpleQueryClass = 'simple-list' + orgIdString;
+        var fullQueryClass = 'full-list' + orgIdString;
+        console.log(simpleQueryClass, fullQueryClass)
+        // var orgMembers = Polymer.dom(this.root).querySelectorAll(simpleQueryClass);
+        // var wardList = Polymer.dom(this.root).querySelectorAll(fullQueryClass);
+
+        console.log(orgMembers, wardList)
+
+        
+        var wardListName = 'ward' + orgIdString;
+        var orgListName = 'brainstorm' + orgIdString;
+        console.log(orgListName,wardListName)
+
+        wardList.forEach(function (element) {
+
+          Sortable.create(element, {
+            // handle: ".handle", 
+            group: {
+              name: wardListName, 
+              pull: "clone", 
+              put: false
+            },
+            sort: false
+          });
+        });
+
+        console.log("accepted name", wardListName)
+
+        orgMembers.forEach(function (element) {
 
           Sortable.create(element, {
             handle: ".handle", 
-            group: "brainstorm",
+            group: {
+              name: orgListName,
+              pull: false,
+              put: [wardListName],
+            },
             filter: ".remove",
             sort: true,
             onFilter: function (e) {
