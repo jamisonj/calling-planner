@@ -125,32 +125,12 @@
           reflectToAttribute: true,
           observer: '_pageChanged',
         },
-
-        bishop_items: {
-          type: Array,
-          value: [{"name": "Bernie Sanders"}, {"name": "Donald Trump"}, {"name": "Neil Gorsuch"}],
-          notify: true,
-          reflectToAttribute: true
-        },
-        fc_items: {
-          type: Array,
-          value: [{"name": "Mark Zuckerberg"}, {"name": "Elon Musk"}, {"name": "John Rockefeller"}],
-          notify: true,
-          reflectToAttribute: true
-        },
-        sc_items: {
-          type: Array,
-          value: [{"name": "Mark Keith"}, {"name": "Gove Allen"}, {"name": "Tom Meservy"}],
-          notify: true,
-          reflectToAttribute: true
-        },
         orgs: {
           type: Array,
           value: getOrganizations(window.json),
           notify: true,
           reflectToAttribute: true
         },
-
         orgId: String,
       },
 
@@ -177,11 +157,6 @@
       },
 
       _pageChanged: function(page) {
-
-        //Run the AJAX request when the index.html page is refreshed.
-        // this.$.checkLoginAjax.generateRequest();
-        // console.log(page);
-
         // Load page import on demand. Show 404 page if fails.
         var resolvedPageUrl = this.resolveUrl('calling-planner-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
@@ -193,12 +168,6 @@
       const orgs = json.callings;
       let orgs_dict = [];
       for (let i = 0; i < orgs.length; i++) {
-        // const org_info = {}
-        // org_info.name = orgs[i].name;
-        // org_info.id = i;
-        // orgs_dict.push(org_info);
-        // console.log(orgs[i]);
-        // window[i] = orgs[i];
         json.callings[i].id = i;
       }
       return json.callings;

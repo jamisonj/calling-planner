@@ -46,19 +46,7 @@
       attributeChanged: function() {
         //for new callings
         for(var i =0; i < window.staged.length; i++) {
-          // var memberName = window.staged[i].member.preferredName;
-          // var memberCallingChangesArr = window.releasedObj[memberName];
-          // if (memberCallingChangesArr) {
-          //   for(var j = 0; j < memberCallingChangesArr.length; j++) {
-          //     if(memberCallingChangesArr[j].position === window.staged[i].calling.positionName) { //if current staged position was also released in brainstorm...
-          //       window.released.splice(memberCallingChangesArr[j].index, 1);
-          //       memberCallingChangesArr.splice(j,1);
-          //     }
-          //     else {
-                this.push('changes', window.staged[i])
-          //     }
-          //   }
-          // }
+          this.push('changes', window.staged[i])
         }
         window.staged = [];
 
@@ -70,8 +58,6 @@
 
       },
       addCalling: function (e) {
-        console.log('calling added')
-        console.log(e)
         e.path[2].style.backgroundColor = '#80CBC4';
         window.final.callings[e.path[1].children[0].innerHTML] = {
           calling : e.path[1].children[1].innerHTML,
@@ -81,7 +67,6 @@
       },
 
       removeCalling: function (e) {
-        console.log('calling removed')
         e.path[2].style.backgroundColor = '#EF9A9A';
         window.final.callings[e.path[1].children[0].innerHTML] = {
           calling : undefined,
@@ -90,7 +75,6 @@
       },
 
       addRelease: function (e) {
-        console.log('release added')
         e.path[2].style.backgroundColor = '#80CBC4';
         window.final.releases[e.path[1].children[0].innerHTML] = {
           calling : e.path[1].children[1].innerHTML,
@@ -99,7 +83,6 @@
       },
 
       removeRelease: function (e) {
-        console.log('release removed')
         e.path[2].style.backgroundColor = '#EF9A9A';
         window.final.releases[e.path[1].children[0].innerHTML] = {
           calling : undefined,

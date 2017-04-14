@@ -193,43 +193,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 calling: window.callings[e.item.parentNode.parentNode.children[0].id]
               };
 
-              // console.log(window.stagedObj)
-
-              //if release is in window.staged then 
-              // if(window.stagedObj[release_member.member.preferredName]) {
-              //   console.log('cleared 1')
-              //   for(var i =0; i < window.stagedObj[release_member.member.preferredName].length; i++) {
-              //     console.log(window.stagedObj[release_member.member.preferredName][i] , release_member.calling.positionName)
-              //     if(window.stagedObj[release_member.member.preferredName][i] === release_member.calling.positionName) { //if find calling match
-              //       //remove from window.staged
-              //       console.log('cleared 2')
-              //       console.log(window.staged)
-              //       for(var j = 0; j < window.staged.length; j++) {
-              //         console.log(window.staged[j].member.preferredName , release_member.member.preferredName)
-              //         console.log(window.staged[j].calling.positionName , release_member.calling.positionName)
-              //         if(window.staged[j].member.preferredName === release_member.member.preferredName && window.staged[j].calling.positionName === release_member.calling.positionName ) {
-              //           console.log('cleared 3')
-              //           window.staged[i] = -1;
-
-              //           var item = e.item;
-              //           if (item.parentNode !== null) { item.parentNode.removeChild(item); }
-              //           return null;
-              //         }
-              //       }
-              //     }
-              //   }
-              // }
-  
-              // if (!window.releasedObj[release_member.member.preferredName]) {
-              //   window.releasedObj[release_member.member.preferredName] = []
               window.released.push(release_member);
-              // }
-              // else {
-              //   window.releasedObj[release_member.member.preferredName].push({ release_member.calling.positionName });
-              // }
-              
-              // console.log(window.released);
-              // console.log(window.releasedObj);
 
               var item = e.item;
               if (item.parentNode !== null) {
@@ -248,20 +212,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 member: window.people[evt.item.firstChild.id],
                 calling: window.callings[evt.item.parentNode.parentNode.children[0].id]
               };
-
-              // if (!window.stagedObj[stage_member.member.preferredName]) {
-              //   window.stagedObj[stage_member.member.preferredName] = [stage_member.calling.positionName]
-              //   window.staged.push(stage_member)
-              // }
-              // else {
-              //   //see if calling is already brainstormed for this person
-              //   for(var i = 0; i < window.stagedObj[stage_member.member.preferredName].length; i++) {
-              //     if (window.stagedObj[stage_member.member.preferredName][i] !== stage_member.calling) {
-              //       window.stagedObj[stage_member.member.preferredName].push(stage_member.calling.positionName);
-                    window.staged.push(stage_member)
-                  // }
-              //   }
-              // }
+              
+              window.staged.push(stage_member)
             },
 
             onRemove: function (evt) {
@@ -274,7 +226,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       getOrganization : (json, id) => {
-        // console.log(json[id]);
         if(json[id].hasRendered) {
           if(json[id].children) {
             return json[id].children;
@@ -289,7 +240,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         let callingName = null;
         let callingsInGroupIndex = -1;
-        // const orgId = window.location.pathname.split('/')[2]; 
+ 
         if(!id) return null;
         let org = json[id].children;
         // console.log(org)
@@ -317,10 +268,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     function extractCallingsFromAssignmentsInGroup(i, org) {
-
-      // console.log('i',i);
-      // console.log('org',org);
-      // console.log('orgi',org[i]);
 
       (i || i === 0) ? current_org = org[i] : current_org = org;
       if (current_org.children) {
