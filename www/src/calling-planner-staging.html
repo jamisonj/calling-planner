@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="calling-planner-staging">
@@ -15,16 +16,14 @@
     <p>Proposed Calls</p>
     <template id="repeat" is="dom-repeat" items="[[changes]]" as="change" indexAs="index">
       <div class="card">
-          <p id="card_counter"> <b>{{change.member.preferredName}}</b> - <em>{{change.calling.positionName}}</em> </p>
-          <p> <b>{{change}}</b> [[index]] </p>
+          <p id="card_counter"> <b>{{change.member.preferredName}}</b> - <em>{{change.calling.positionName}}</em> <iron-icon icon="icons:check-circle"></iron-icon> <iron-icon icon="icons:cancel"></iron-icon> </p>
       </div>
     </template>
 
     <p>Proposed Releases</p>
     <template id="repeat" is="dom-repeat" items="[[releases]]" as="release" indexAs="r_index">
       <div class="card">
-          <p id="card_counter"> <b>{{release.member.preferredName}}</b> - <em>{{release.calling.positionName}}</em> </p>
-          <p> <b>{{release}}</b> [[r_index]] </p>
+          <p id="card_counter"> <b>{{release.member.preferredName}}</b> - <em>{{release.calling.positionName}}</em> <iron-icon icon="icons:check-circle"></iron-icon> <iron-icon icon="icons:cancel"></iron-icon></p>
       </div>
     </template>
   </template>

@@ -155,7 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 calling: window.callings[e.item.parentNode.parentNode.children[0].id]
               };
 
-              console.log(window.stagedObj)
+              // console.log(window.stagedObj)
 
               //if release is in window.staged then 
               // if(window.stagedObj[release_member.member.preferredName]) {
@@ -211,19 +211,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 calling: window.callings[evt.item.parentNode.parentNode.children[0].id]
               };
 
-              if (!window.stagedObj[stage_member.member.preferredName]) {
-                window.stagedObj[stage_member.member.preferredName] = [stage_member.calling.positionName]
-                window.staged.push(stage_member)
-              }
-              else {
-                //see if calling is already brainstormed for this person
-                for(var i = 0; i < window.stagedObj[stage_member.member.preferredName].length; i++) {
-                  if (window.stagedObj[stage_member.member.preferredName][i] !== stage_member.calling) {
-                    window.stagedObj[stage_member.member.preferredName].push(stage_member.calling.positionName);
+              // if (!window.stagedObj[stage_member.member.preferredName]) {
+              //   window.stagedObj[stage_member.member.preferredName] = [stage_member.calling.positionName]
+              //   window.staged.push(stage_member)
+              // }
+              // else {
+              //   //see if calling is already brainstormed for this person
+              //   for(var i = 0; i < window.stagedObj[stage_member.member.preferredName].length; i++) {
+              //     if (window.stagedObj[stage_member.member.preferredName][i] !== stage_member.calling) {
+              //       window.stagedObj[stage_member.member.preferredName].push(stage_member.calling.positionName);
                     window.staged.push(stage_member)
-                  }
-                }
-              }
+                  // }
+              //   }
+              // }
             },
 
             onRemove: function (evt) {
