@@ -17,27 +17,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-
-        padding: 
-        10px;
+        padding: 10px;
+        font-family: var(--app-body-font);
       }
+
       paper-card.rate { @apply(--layout-horizontal); }
+
+      h1 {
+        font-size: 1.5em;
+        margin: 10px;
+        font-family: var(--app-header-font);
+      }
+
+      h2 {
+        font-size: 1.3em;
+        margin: 10px;
+        font-family: var(--app-header-font);
+      }
+
       .rate-image {
         width: 200px;
         height: 170px;
         background: url('./donuts.jpg');
         background-size: cover;
       }
+
       .rate-content {
         @apply(--layout-flex);
         float: left;
       }
+
       .rate-header { @apply(--paper-font-headline); }
+
       .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+
       paper-icon-button.rate-icon {
         --iron-icon-fill-color: white;
         --iron-icon-stroke-color: var(--paper-grey-600);
       }
+
       .org {
         transition: box-shadow .5s;
         width: 200px;
@@ -58,23 +76,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .simple-list {
-        background-color: #eee; 
+        margin: 10px;
+        padding: 10px;
+        background-color: var(--app-quaternary-color);
         min-height: 50px;
-        padding-left: 0;
-        cursor: move;
+        width: 240px;
       }
 
-      .simple-list li {
+      .full-list-member {
+        background-color: var(--app-secondary-color);
+        margin: 5px 0;
+        padding: 5px;
+        color: #fff;
+        cursor: move;
+        /*cursor: -webkit-grabbing;*/
         list-style-type: none;
-        margin-left: 10px;
       }
 
-      .simple-list .handle {
+      .brainstorm-member {
+        background-color: rgb(140, 50, 50);
+        margin: 5px 0;
+        padding: 5px;
+        color: #fff;
         cursor: move;
+        /*cursor: -webkit-grabbing;*/
+        list-style-type: none;
       }
 
-      .simple-list .remove {
-        cursor: pointer;
+/*      .handle {
+        cursor: move;
+        cursor: -webkit-grabbing;
+      }*/
+
+      .remove {
+        float: right;
+        color: rgb(170, 170, 170);
+        font-weight: bold;
       }
 
     </style>
@@ -93,7 +130,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <h2 id="{{calling.callingTypeId}}">{{calling.callingTitle}}</h2>
                 <ul class="simple-list">
                   <template is="dom-repeat" items ="{{calling.callingMembers}}" as="member" index-as="member_number">
-                    <li><span id="{{member.individualId}}" class="{{member.positionName}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
+                    <li class="brainstorm-member"><span id="{{member.individualId}}" class="{{member.positionName}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
                   </template>
                 </ul>
             </div>

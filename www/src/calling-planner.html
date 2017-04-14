@@ -21,19 +21,51 @@
   <template>
     <style>
       :host {
-        --app-primary-color: #4285f4;
-        --app-secondary-color: black;
+        --app-primary-color: rgb(60, 77, 113);
+        --app-secondary-color: rgb(0, 145, 188);
+        --app-tertiary-color: rgba(255,155,55, 0.9);
+        --app-quaternary-color: rgba(0,0,0,0.1);
+        --app-maroon: rgb(140, 50, 50);
+        --app-header-font: 'Slabo 27px', serif;
+        --app-body-font: 'Roboto', 'Noto', sans-serif;
 
         display: block;
+        font-family: var(--app-body-font);
       }
 
       app-header {
         color: #fff;
         background-color: var(--app-primary-color);
+        min-height: 104px;
       }
+
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
+
+      h1 {
+        font-size: 1.5em;
+        margin: 10px;
+        font-family: var(--app-header-font);
+      }
+
+      h2 {
+        font-size: 1.3em;
+        margin: 10px;
+        font-family: var(--app-header-font);
+      }
+
+      a {
+        color: rgb(255, 255, 255);
+      }
+
+      a:hover {
+        color: rgb(200, 200, 200);
+      }
+
+/*      .sidebar-toolbar {
+        background-color: var(--app-tertiary-color);
+      }*/
 
       .drawer-list {
         margin: 0 20px;
@@ -43,13 +75,33 @@
         display: inline-block;
         padding: 0 16px;
         text-decoration: none;
-        color: var(--app-secondary-color);
+        color: #fff;
         line-height: 40px;
+        font-family: var(--app-header-font);
+        font-size: 1.3em;
       }
 
       .drawer-list a.iron-selected {
-        color: black;
-        font-weight: bold;
+        background-color: var(--app-secondary-color);
+        /*font-weight: bold;*/
+      }
+
+      .full-list {
+        margin: 10px;
+        padding: 10px;
+        background-color: var(--app-quaternary-color);
+        min-height: 50px;
+        width: 240px;
+      }
+
+      .full-list-member {
+        background-color: var(--app-secondary-color);
+        margin: 5px 0;
+        padding: 5px;
+        color: #fff;
+        cursor: move;
+        /*cursor: -webkit-grabbing;*/
+        list-style-type: none;
       }
 
 /*      .handle {
@@ -57,26 +109,41 @@
         cursor: -webkit-grabbing;
       }*/
 
-      .simple-list {
-        padding-left: 10px;
-        background-color: #eee;
-        min-height: 50px;
-      }
-
-      .simple-list li {
-        cursor: move;
-        /*cursor: -webkit-grabbing;*/
-        list-style-type: none;
-      }
-
-      .app-header {
-        min-height: 104px;
+      .remove {
+        float: right;
+        color: rgb(170, 170, 170);
+        font-weight: bold;
       }
 
       #drawer {
         overflow-y: scroll;
         overflow-x: hidden;
+        top: 0px;
+        bottom: 0px;
+        --app-drawer-width: 300px;
+        --app-drawer-content-container: {
+          padding: 0;
+          position: static;
+        }
       }
+
+      .main-title {
+        font-family: var(--app-header-font);
+        font-size: 1.5em;
+      }
+
+      .logout-greeting {
+        font-family: var(--app-header-font);
+      }
+
+      .login {
+        font-family: var(--app-header-font);
+      }
+
+      #first-header {
+        margin-left: 0;
+      }
+      
     </style>
 
 <!--     <iron-ajax
@@ -111,18 +178,18 @@
     <app-drawer-layout fullbleed>
       <!-- Drawer content -->
       <app-drawer id="drawer">
-        <app-toolbar>Ward List</app-toolbar>
-        <p>Unassigned Members</p>
-        <ul class="simple-list">
+        <app-toolbar class="sidebar-toolbar"><h1 id="first-header">Ward List</h1></app-toolbar>
+        <h2>Unassigned Members</h2>
+        <ul class="full-list">
           <template is="dom-repeat" items={{unassigned}}>
-            <li><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}}  <span class="remove">X</span></li>
+            <li class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
           </template>
         </ul>
-        <p>Assigned Members</p>
-        <ul class="simple-list">
+        <h2>Assigned Members</h2>
+        <ul class="full-list">
           <template is="dom-repeat" items={{assigned}}>
             <em>{{item.positionName}}</em>
-            <li><span id="{{item.individualId}}"></span><span class="hidden"></span><span class="handle">::</span> {{item.preferredName}}  <span class="remove">X</span></li>
+            <li class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
           </template>
         </ul>
         <br/><br/><br/><br/>
@@ -134,12 +201,12 @@
         <app-header condenses reveals effects="waterfall" class="app-header">
           <app-toolbar>
             <paper-icon-button icon="calling-planner-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>Calling Planner</div>
+            <div class="main-title" main-title>Calling Planner</div>
             <div class="logout-greeting" hidden$="{{!storedUser.loggedin}}">
               <span class="greeting">Hi, {{storedUser.username}}!</span>
               <calling-planner-logout link></calling-planner-logout>
             </div>
-            <a name="login" href="/login" hidden$="{{storedUser.loggedin}}">Login</a>
+            <a class="login" name="login" href="/login" hidden$="{{storedUser.loggedin}}">Login</a>
           </app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation" hidden$="{{!storedUser.loggedin}}">
             <a name="brainstorm" href="/brainstorm">Brainstorm Zone</a>
@@ -215,8 +282,8 @@
       },
 
       ready: function () {
-        // var elements = Polymer.dom(this.root).querySelector('.simple-list');
-        var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
+        // var elements = Polymer.dom(this.root).querySelector('.full-list');
+        var elements = Polymer.dom(this.root).querySelectorAll('.full-list');
 
         // console.log(elements);
 
