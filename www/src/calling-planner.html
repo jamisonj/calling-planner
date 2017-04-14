@@ -182,14 +182,14 @@
         <h2>Unassigned Members</h2>
         <ul class="full-list">
           <template is="dom-repeat" items={{unassigned}}>
-            <li class="full-list-member"><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+            <li class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
           </template>
         </ul>
         <h2>Assigned Members</h2>
         <ul class="full-list">
           <template is="dom-repeat" items={{assigned}}>
             <em>{{item.positionName}}</em>
-            <li class="full-list-member"><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+            <li class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
           </template>
         </ul>
         <br/><br/><br/><br/>
@@ -243,7 +243,6 @@
         page: {
           type: String,
           notify: true,
-          reflectToAttribute: true,
           observer: '_pageChanged',
         },
 
@@ -262,13 +261,11 @@
           type: Array,
           value: window.unassigned,
           notify: true,
-          reflectToAttribute: true
         },
         assigned: { // This is where the entire ward list of names will go. Current names are placeholders.
           type: Array,
           value: window.assigned,
           notify: true,
-          reflectToAttribute: true
         }
       },
 
@@ -278,7 +275,6 @@
       ],
 
       testUser: function () {
-        console.log(this.storedUser);
       },
 
       stringify: function(obj) {
@@ -320,12 +316,12 @@
             };
         }
 
-        console.log(this.storedUser);
+        // console.log(this.storedUser);
       },
 
       handleSessionError: function(event) {
           this.error = event.detail.request.xhr.response;
-          console.log(this.error);
+          // console.log(this.error);
           // this.storedUser.loggedin = false;
       },
 

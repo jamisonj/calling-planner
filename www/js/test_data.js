@@ -49,12 +49,14 @@ orgs.forEach((org) => {
 })
 
 // console.log(callings);
+window.callings = {};
 
 callings.forEach((type) => {
 	if(type !== -1) {
 		type.forEach((person)=> {
 			if(!window.people[person.individualId]) {}
 			else {
+				window.callings[person.positionTypeId] = person;
 				window.people[person.individualId].positionName = person.positionName;
 				window.people[person.individualId].positionTypeId = person.positionTypeId;
 				window.people[person.individualId].dateActivated = person.dateActivated;
@@ -65,10 +67,13 @@ callings.forEach((type) => {
 	}
 })
 
-// console.log(window.people);
+// console.log(window.callings)
+
 window.unassigned = [];
 window.assigned = [];
 window.wardChildren = [];
+window.staged = [];
+window.unstaged = [];
 
 for(let key in window.people) {
 	if (window.people[key].hasPosition) {

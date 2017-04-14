@@ -79,6 +79,8 @@ app.use('/api', bodyParser.json());
 
 // Our API can only be hit if the user is authenticated.
 app.get('/api/*', function(req, res) {
+    console.log(req);
+    res.send(req);
     if (!req.user) return res.sendStatus(401);
     res.send(data[req.user.username]);
 });
