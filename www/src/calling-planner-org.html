@@ -149,57 +149,87 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             filter: ".remove",
             sort: true,
             onFilter: function (e) {
-              // console.log('deleted', e);
 
-              var index = e.item.children[1].id;
-              // index = parseInt(index) + 1;
-              console.log(index)
-              window.staged[index] = -1;
-              console.log(window.staged)
+              var release_member = {
+                member: window.people[e.item.firstChild.id],
+                calling: window.callings[e.item.parentNode.parentNode.children[0].id]
+              };
+
+              console.log(window.stagedObj)
+
+              //if release is in window.staged then 
+              if(window.stagedObj[release_member.member.preferredName]) {
+                console.log('cleared 1')
+                for(var i =0; i < window.stagedObj[release_member.member.preferredName].length; i++) {
+                  console.log(window.stagedObj[release_member.member.preferredName][i] , release_member.calling.positionName)
+                  if(window.stagedObj[release_member.member.preferredName][i] === release_member.calling.positionName) { //if find calling match
+                    //remove from window.staged
+                    console.log('cleared 2')
+                    for(var j = 0; j < window.staged.length; j++) {
+                      console.log(window.staged[j].member.preferredName , release_member.member.preferredName)
+                      console.log(window.staged[j].calling.positionName , release_member.calling.positionName)
+                      if(window.staged[j].member.preferredName === release_member.member.preferredName && window.staged[j].calling.positionName === release_member.calling.positionName ) {
+                        console.log('cleared 3')
+                        window.staged[i] = -1;
+
+                        var item = e.item;
+                        if (item.parentNode !== null) { item.parentNode.removeChild(item); }
+                        return null;
+                      }
+                    }
+                  }
+                }
+              }
+  
+              // if (!window.releasedObj[release_member.member.preferredName]) {
+              //   window.releasedObj[release_member.member.preferredName] = []
+                window.released.push(release_member);
+              // }
+              // else {
+              //   window.releasedObj[release_member.member.preferredName].push({ release_member.calling.positionName });
+              // }
+              
+              // console.log(window.released);
+              // console.log(window.releasedObj);
 
               var item = e.item;
               if (item.parentNode !== null) {
                 item.parentNode.removeChild(item);
               }
+
             },
+
             onUpdate: function (evt) {
               // console.log('updated', evt);
             },
+
             onAdd: function (evt) {
-              // console.log('added', evt);
-              // console.log(window.callings[evt.item.parentNode.parentNode.children[0].id])
+
               var stage_member = {
                 member: window.people[evt.item.firstChild.id],
                 calling: window.callings[evt.item.parentNode.parentNode.children[0].id]
               };
-              evt.item.children[1].id = window.staged.length;
-              if (evt.path[0].children[evt.newIndex].localName === 'template') {
-                evt.path[0].children[1].id = window.staged.length
+
+              if (!window.stagedObj[stage_member.member.preferredName]) {
+                window.stagedObj[stage_member.member.preferredName] = [stage_member.calling.positionName]
+                window.staged.push(stage_member)
               }
               else {
-                evt.path[0].children[evt.newIndex].id = window.staged.length;
-                // console.log( evt.path[0].children[evt.newIndex] );
+                //see if calling is already brainstormed for this person
+                for(var i = 0; i < window.stagedObj[stage_member.member.preferredName].length; i++) {
+                  if (window.stagedObj[stage_member.member.preferredName][i] !== stage_member.calling) {
+                    window.stagedObj[stage_member.member.preferredName].push(stage_member.calling.positionName);
+                    window.staged.push(stage_member)
+                  }
+                }
               }
-              window.staged.push(stage_member)
-              console.log(window.staged)
             },
+
             onRemove: function (evt) {
               console.log('removed', evt);
-              var path = window.location.pathname.split('/');
-
-              // var id = path[path.length-1];
-              //replace with -1
-
-
-              //append new one
-              var index = evt.item.children[1].id;
-              index = parseInt(index);
-              console.log(index);
-              if (index != -1) { window.staged[index-1] = -1; }
-              console.log(index)
-
-              console.log(window.staged)
+              console.warn('this action should be disabled');
             }
+
           });
         });
       },

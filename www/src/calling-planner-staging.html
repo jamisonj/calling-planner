@@ -12,11 +12,19 @@
       }
     </style>
 
-    <p>Unassigned Members</p>
+    <p>Proposed Calls</p>
     <template id="repeat" is="dom-repeat" items="[[changes]]" as="change" indexAs="index">
       <div class="card">
           <p id="card_counter"> <b>{{change.member.preferredName}}</b> - <em>{{change.calling.positionName}}</em> </p>
           <p> <b>{{change}}</b> [[index]] </p>
+      </div>
+    </template>
+
+    <p>Proposed Releases</p>
+    <template id="repeat" is="dom-repeat" items="[[releases]]" as="release" indexAs="r_index">
+      <div class="card">
+          <p id="card_counter"> <b>{{release.member.preferredName}}</b> - <em>{{release.calling.positionName}}</em> </p>
+          <p> <b>{{release}}</b> [[r_index]] </p>
       </div>
     </template>
   </template>
@@ -30,15 +38,37 @@
           notify: true,
           value: window.staged
         },
+        releases: {
+          type: Array,
+          notify: true,
+          value: window.released
+        }
       },
       attributeChanged: function() {
-        console.log('attr changed');
-        console.log(window.staged.length)
+        //for new callings
         for(var i =0; i < window.staged.length; i++) {
-          (window.staged[i] !== -1) ? this.push('changes', window.staged[i]) : this.splice('changes', i, 1);
+          // var memberName = window.staged[i].member.preferredName;
+          // var memberCallingChangesArr = window.releasedObj[memberName];
+          // if (memberCallingChangesArr) {
+          //   for(var j = 0; j < memberCallingChangesArr.length; j++) {
+          //     if(memberCallingChangesArr[j].position === window.staged[i].calling.positionName) { //if current staged position was also released in brainstorm...
+          //       window.released.splice(memberCallingChangesArr[j].index, 1);
+          //       memberCallingChangesArr.splice(j,1);
+          //     }
+          //     else {
+                this.push('changes', window.staged[i])
+          //     }
+          //   }
+          // }
         }
         window.staged = [];
-        console.log(this.changes)
+
+        // for new releases
+        for(var i =0; i < window.released.length; i++) {
+          this.push('releases', window.released[i])
+        }
+        window.released = [];
+
       },
     });
   </script>

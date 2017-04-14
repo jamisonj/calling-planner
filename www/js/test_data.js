@@ -73,7 +73,9 @@ window.unassigned = [];
 window.assigned = [];
 window.wardChildren = [];
 window.staged = [];
-window.unstaged = [];
+window.stagedObj = {};
+window.released = [];
+window.releasedObj = {};
 
 for(let key in window.people) {
 	if (window.people[key].hasPosition) {
