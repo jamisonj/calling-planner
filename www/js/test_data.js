@@ -77,8 +77,10 @@ window.stagedObj = {};
 window.released = [];
 window.releasedObj = {};
 window.final = {};
-window.final.callings = [];
-window.final.releases = [];
+window.final.callings = {};
+window.final.callings.printable = [];
+window.final.releases = {};
+window.final.releases.printable = [];
 
 for(let key in window.people) {
 	if (window.people[key].hasPosition) {

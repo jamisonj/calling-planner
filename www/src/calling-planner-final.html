@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="calling-planner-final">
@@ -16,10 +17,20 @@
     <!-- <app-data key="userData" data="{{storedUser}}"></app-data> -->
 
     <div class="card">
-      <div class="circle">3</div>
-      <h1>View Three</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+      <h1>Calling Changes</h1> <paper-button raised on-tap="submit">Print</paper-button>
+      <h3>Calls</h3>
+      <ul>
+      <template id="repeat1" is="dom-repeat" items="[[calls]]" as="call">
+        <li><b>{{call.name}}</b> <em>{{call.calling}}</em></li>
+      </template>
+      </ul>
+
+      <h3>Releases</h3>
+      <ul>
+      <template id="repeat2" is="dom-repeat" items="[[releases]]" as="release">
+        <li><b>{{release.name}}</b> <em>{{release.calling}}</em></li>
+      </template>
+      </ul>
     </div>
   </template>
 
@@ -27,12 +38,47 @@
     Polymer({
       is: 'calling-planner-final',
       properties: {
-        storedUser: Object
+        calls: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        releases: {
+          type: Array,
+          notify: true,
+          value : []
+        }
       },
+      // created: function () {
+      //   this.generateNewData('calls', 'callings')
+      //   this.generateNewData('releases', 'releases')
+      // },
       attributeChanged: function () {
-        console.log(window.final.callings);
-        console.log(window.final.releases);
-      }
+        this.splice('calls', 0, this.calls.length);
+        for (var key in window.final.callings) {
+          if (!window.final.callings.hasOwnProperty(key)) continue;
+
+          var obj = window.final.callings[key];
+
+          if(obj.status === 'added') {
+            obj.name = key;
+            this.push('calls', obj)
+          }
+        }
+
+        this.splice('releases', 0, this.releases.length);
+        console.log('this.releases', this.releases)
+        for (var key in window.final.releases) {
+          if (!window.final.releases.hasOwnProperty(key)) continue;
+
+          var obj = window.final.releases[key];
+
+          if(obj.status === 'added') {
+            obj.name = key;
+            this.push('releases', obj)
+          }
+        }
+      },
     });
   </script>
 </dom-module>
