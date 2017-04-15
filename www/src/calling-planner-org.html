@@ -129,7 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template is="dom-repeat" items="{{item.callingsInGroup}}" as="calling" index-as="calling_number">
             <div id="org" class="card">
               <h2 id="{{calling.callingTypeId}}">{{calling.callingTitle}}</h2>
-                <ul class="simple-list">
+                <ul class="simple-list" on-dom-change="onDOMChange">
                   <template is="dom-repeat" items ="{{calling.callingMembers}}" as="member" index-as="member_number">
                     <li class="brainstorm-member"><span id="{{member.individualId}}" class="{{member.positionTypeId}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
                   </template>
@@ -162,7 +162,126 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true,
           reflectToAttribute: true,
           observer: 'idChanged'
-        }
+        },
+        appendedHTML: {
+          type: Array,
+          value: []
+        },
+      },
+
+      // listeners: {
+      //   'dom-change': 'onDOMChange'
+      // },
+
+      onDOMChange: function (e) {
+
+        var list_element = Polymer.dom(e.target.parentNode).node;
+        var appendedHTML = this.appendedHTML;
+        var removedHTML = this.removedHTML;
+        var orgId = this.orgId;
+        console.log(orgId);
+        
+          Sortable.create(list_element, {
+            handle: ".handle", 
+            group: "brainstorm",
+            filter: ".remove",
+            sort: true,
+            onFilter: function (e) { // AKA: On removal.
+
+
+              var release_member = {
+                member: window.people[e.item.firstChild.id],
+                calling: window.callings[e.item.parentNode.parentNode.children[0].id]
+              };
+
+              window.released.push(release_member);
+
+              // On filter, remove the person from the window.groups object.
+              window.groups[orgId].forEach(function(element) {
+                console.log(element);
+
+                if (element.orgTypeId == e.item.parentNode.parentNode.parentNode.firstElementChild.id) {
+                  
+                  element.callingsInGroup.forEach(function(calling) {
+                    // console.log(calling);
+
+                    if (calling.callingTypeId == e.item.parentNode.parentNode.children[0].id) {
+                      for (i = 0; i < calling.callingMembers.length; i++) {
+                        console.log(calling.callingMembers[i]);
+                        if (calling.callingMembers[i].individualId == e.item.firstChild.id) {
+                          calling.callingMembers.splice(i, 1);
+                          console.log(calling.callingMembers[i]);
+                        }
+                      }
+                    }
+                    return calling.callingMembers;
+                  });
+                }
+                
+                return element;
+              });
+
+              var item = Polymer.dom(e.item).node;
+              if (item.parentNode !== null) {
+                item.parentNode.removeChild(item);
+              }
+
+              console.log(appendedHTML);
+
+              for (i = 0; i < appendedHTML.length; i++) {
+                if (appendedHTML[i].name == e.item.id) {
+                  appendedHTML.splice(appendedHTML[i], 1);
+                }
+              }
+            },
+
+            onUpdate: function (evt) {
+              // console.log('updated', evt);
+            },
+
+            onAdd: function (evt) {
+
+              //TODO: On add, add the person to the window.groups object.
+
+              // console.log(window.people[evt.item.firstChild.id].positionTypeId);
+              // console.log(evt.item.parentNode.parentNode.children[0].id);
+
+              evt.item.childNodes[0].name = evt.item.parentNode.parentNode.children[0].id; // Set the name property to equal the new positionID.
+
+              // window.people[evt.item.firstChild.id].positionTypeId = evt.item.parentNode.parentNode.children[0].id;
+
+              var new_element = evt.item;
+              appendedHTML.push(new_element);
+              // console.log(appendedHTML);
+
+              var stage_member = {
+                member: window.people[evt.item.firstChild.id],
+                calling: window.callings[evt.item.parentNode.parentNode.children[0].id]
+              };
+              
+              window.staged.push(stage_member);
+            },
+
+            onRemove: function (evt) {
+              console.log('removed', evt);
+              console.warn('this action should be disabled');
+            }
+
+          });
+
+        var full_list_elements = Polymer.dom(e.target.parentNode).querySelectorAll('.full-list-member');
+
+        full_list_elements.forEach(function (element) {
+          if (element.childNodes[0].name !== e.target.parentNode.parentNode.childNodes[1].id) {
+            element.parentNode.removeChild(element); //delete element from DOM if it shouldn't be there.
+          }
+        });
+
+        this.appendedHTML.forEach(function (element) {
+          if (element.childNodes[0].name == e.target.parentNode.parentNode.childNodes[1].id) {
+            e.target.parentNode.appendChild(element); //Add element to DOM if it should be there.
+          } 
+        });
       },
 
       // Check if we are loading the last list element.
@@ -193,75 +312,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       arrayChanged: function () {
-        var elements = Polymer.dom(this.root).querySelectorAll('.simple-list');
 
-        elements.forEach(function (element) {
-
-          Sortable.create(element, {
-            handle: ".handle", 
-            group: "brainstorm",
-            filter: ".remove",
-            sort: true,
-            onFilter: function (e) {
-
-              var release_member = {
-                member: window.people[e.item.firstChild.id],
-                calling: window.callings[e.item.parentNode.parentNode.children[0].id]
-              };
-
-              window.released.push(release_member);
-
-              var item = e.item;
-              if (item.parentNode !== null) {
-                item.parentNode.removeChild(item);
-              }
-
-            },
-
-            onUpdate: function (evt) {
-              // console.log('updated', evt);
-            },
-
-            onAdd: function (evt) {
-
-              console.log(window.people[evt.item.firstChild.id].positionTypeId);
-              console.log(evt.item.parentNode.parentNode.children[0].id);
-
-              window.people[evt.item.firstChild.id].positionTypeId = evt.item.parentNode.parentNode.children[0].id;
-
-              var stage_member = {
-                member: window.people[evt.item.firstChild.id],
-                calling: window.callings[evt.item.parentNode.parentNode.children[0].id]
-              };
-              
-              window.staged.push(stage_member);
-            },
-
-            onRemove: function (evt) {
-              console.log('removed', evt);
-              console.warn('this action should be disabled');
-            }
-
-          });
-
-          var elements = Polymer.dom(this.root).querySelectorAll('.full-list-member');
-
-          elements.forEach(function (element) {
-
-            console.log(element.children);
-
-            // for (var i = 0; i < element.children.length; i++) {
-
-            //   console.log(element.children[i].localName);
-            //   console.log(element.children[i].className);
-              
-            //   if (element.children[i].localName = "li" && element.children[i].className == "full-list-member") {
-            //     console.log(element.children[i].innerHTML);
-            //   }
-              
-            // }
-          });
-        });
       },
 
       getOrganization : (json, id) => {
