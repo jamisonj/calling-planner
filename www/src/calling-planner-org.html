@@ -131,7 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <h2 id="{{calling.callingTypeId}}">{{calling.callingTitle}}</h2>
                 <ul class="simple-list">
                   <template is="dom-repeat" items ="{{calling.callingMembers}}" as="member" index-as="member_number">
-                    <li class="brainstorm-member"><span id="{{member.individualId}}" class="{{member.positionName}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
+                    <li class="brainstorm-member"><span id="{{member.individualId}}" class="{{member.positionTypeId}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
                   </template>
                 </ul>
             </div>
@@ -173,7 +173,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       idChanged: function() {
         var id = this.orgId;
-        this.groups = this.getOrganization(json.callings, id);
+        
+        if (window.groups == undefined) {
+          window.groups = {};
+        } 
+
+        // If we've already set the window.groups[i] object, get that instead (allows persistent changes).
+        if (window.groups[id] !== undefined) {
+          this.groups = window.groups[id];
+        }
+
+        // Else, get it from the builder function.
+        else {
+          this.groups = this.getOrganization(json.callings, id);
+          window.groups[id] = this.groups;
+        }
+        
+        console.log(this.groups);
       },
 
       arrayChanged: function () {
@@ -208,12 +224,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             onAdd: function (evt) {
 
+              console.log(window.people[evt.item.firstChild.id].positionTypeId);
+              console.log(evt.item.parentNode.parentNode.children[0].id);
+
+              window.people[evt.item.firstChild.id].positionTypeId = evt.item.parentNode.parentNode.children[0].id;
+
               var stage_member = {
                 member: window.people[evt.item.firstChild.id],
                 calling: window.callings[evt.item.parentNode.parentNode.children[0].id]
               };
               
-              window.staged.push(stage_member)
+              window.staged.push(stage_member);
             },
 
             onRemove: function (evt) {
@@ -221,6 +242,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               console.warn('this action should be disabled');
             }
 
+          });
+
+          var elements = Polymer.dom(this.root).querySelectorAll('.full-list-member');
+
+          elements.forEach(function (element) {
+
+            console.log(element.children);
+
+            // for (var i = 0; i < element.children.length; i++) {
+
+            //   console.log(element.children[i].localName);
+            //   console.log(element.children[i].className);
+              
+            //   if (element.children[i].localName = "li" && element.children[i].className == "full-list-member") {
+            //     console.log(element.children[i].innerHTML);
+            //   }
+              
+            // }
           });
         });
       },
