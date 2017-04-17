@@ -115,7 +115,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         cursor: default;
       }
 
+      #drawer {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        top: 110px;
+        width: 20vw;
+        position: fixed;
+        height: 900vh;
+      }
+
+      #content {
+        width: 75vw;
+        top: 120px;
+        right: 0px;
+        position: absolute;
+      }
+
     </style>
+
+  <!-- Drawer content -->
+  <div id="drawer">
+    <h1 id="first-header">Ward List</h1>
+    <h2>Unassigned Members</h2>
+    <ul class$="full-list{{orgId}} full-list">
+      <template is="dom-repeat" items={{unassigned}}>
+        <li class$="member{{orgId}} full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+      </template>
+    </ul>
+    <h2>Assigned Members</h2>
+    <ul class$="full-list{{orgId}} full-list">
+      <template is="dom-repeat" items={{assigned}}>
+        <em>{{item.positionName}}</em>
+        <li class$="member{{orgId}} full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+      </template>
+    </ul>
+  </div>
+
 
     <div id="content">
 
@@ -123,15 +158,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <a name="brainstorm" href="/brainstorm/">Back to Organizations</a>
       <!-- </iron-selector> -->
 
-      <template is="dom-repeat" items="[[groups]]">
+
+      <template is="dom-repeat" items="{{groups}}" as="group">
         <div>
-          <h1 id="{{item.orgTypeId}}">{{item.name}}</h1>
-          <template is="dom-repeat" items="{{item.callingsInGroup}}" as="calling" index-as="calling_number">
+          <h1 id="{{group.orgTypeId}}">{{group.name}}</h1>
+          <template is="dom-repeat" items="{{group.callingsInGroup}}" as="calling" index-as="calling_number">
             <div id="org" class="card">
               <h2 id="{{calling.callingTypeId}}">{{calling.callingTitle}}</h2>
-                <ul class="simple-list" on-dom-change="onDOMChange">
+                <ul class$="simple-list{{group.instanceId}} simple-list">
                   <template is="dom-repeat" items ="{{calling.callingMembers}}" as="member" index-as="member_number">
-                    <li class$="{{getClass(member)}}"><span id="{{member.individualId}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
+                    <li class$="brainstorm-member{{group.instanceId}} brainstorm-member"><span id="{{member.individualId}}" class="{{member.positionName}}"></span><span id="-1" class="handle">::</span> {{member.preferredName}} <span class="remove">X</span></li>
                   </template>
                 </ul>
             </div>
@@ -163,201 +199,132 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true,
           observer: 'idChanged'
         },
-        appendedHTML: {
+        unassigned: { // This is where the entire ward list of names will go. Current names are placeholders.
           type: Array,
-          value: []
+          value: window.unassigned,
+          notify: true,
         },
-      },
-
-      // listeners: {
-      //   'dom-change': 'onDOMChange'
-      // },
-
-      onDOMChange: function (e) {
-
-        var list_element = Polymer.dom(e.target.parentNode).node;
-        var appendedHTML = this.appendedHTML;
-        var removedHTML = this.removedHTML;
-        var orgId = this.orgId;
-        console.log(orgId);
-        
-        Sortable.create(list_element, {
-          handle: ".handle", 
-          group: "brainstorm",
-          filter: ".remove",
-          sort: true,
-          onFilter: function (e) { // AKA: On removal.
-
-            var release_member = {
-              member: window.people[e.item.firstChild.id],
-              calling: window.callings[e.item.parentNode.parentNode.children[0].id]
-            };
-
-            window.released.push(release_member);
-
-            // On filter, remove the person from the window.groups object.
-            // window.groups[orgId].forEach(function(element) {
-            //   console.log(element);
-
-            //   if (element.orgTypeId == e.item.parentNode.parentNode.parentNode.firstElementChild.id) {
-                
-            //     element.callingsInGroup.forEach(function(calling) {
-            //       // console.log(calling);
-
-            //       if (calling.callingTypeId == e.item.parentNode.parentNode.children[0].id) {
-            //         for (i = 0; i < calling.callingMembers.length; i++) {
-            //           console.log(calling.callingMembers[i]);
-            //           if (calling.callingMembers[i].individualId == e.item.firstChild.id) {
-            //             calling.callingMembers.splice(i, 1);
-            //             console.log(calling.callingMembers[i]);
-            //           }
-            //         }
-            //       }
-            //       // return calling.callingMembers;
-            //     });
-            //   }
-              
-            //   // return element;
-            // });
-
-            var item = Polymer.dom(e.item).node;
-            if (item.parentNode !== null) {
-              item.parentNode.removeChild(item);
-            }
-
-            // console.log(appendedHTML);
-
-            for (i = 0; i < appendedHTML.length; i++) {
-              if (appendedHTML[i].childNodes[0].id == e.item.childNodes[0].id) {
-                appendedHTML.splice(appendedHTML[i], 1);
-              }
-            }
-          },
-
-          onUpdate: function (e) {
-            // console.log('updated', e);
-          },
-
-          onAdd: function (e) {
-
-            //TODO: On add, add the person to the window.groups object.
-
-            // console.log(window.people[evt.item.firstChild.id].positionTypeId);
-            // console.log(evt.item.parentNode.parentNode.children[0].id);
-
-            var member = window.people[e.item.childNodes[0].id];
-
-            console.log(member);
-
-            e.item.childNodes[0].name = e.item.parentNode.parentNode.children[0].id; // Set the name property to equal the new positionID.
-
-            // window.people[evt.item.firstChild.id].positionTypeId = evt.item.parentNode.parentNode.children[0].id;
-
-            // On filter, remove the person from the window.groups object.
-            // window.groups[orgId].forEach(function(element) {
-            //   // console.log(element);
-
-            //   if (element.orgTypeId == e.item.parentNode.parentNode.parentNode.firstElementChild.id) {
-                
-            //     element.callingsInGroup.forEach(function(calling) {
-            //       // console.log(calling);
-
-            //       if (calling.callingTypeId == e.item.parentNode.parentNode.children[0].id) {
-            //         // for (i = 0; i < calling.callingMembers.length; i++) {
-            //         //   console.log(calling.callingMembers[i]);
-            //         //   if (calling.callingMembers[i].individualId == e.item.firstChild.id) {
-            //             calling.callingMembers.push(member);
-            //             console.log(calling.callingMembers);
-            //           // }
-            //         // }
-            //       }
-            //       // return calling.callingMembers;
-            //     });
-            //   }
-              
-            //   // return element;
-            // });
-
-
-            var new_element = e.item;
-            appendedHTML.push(new_element);
-            // console.log(appendedHTML);
-
-            var stage_member = {
-              member: window.people[e.item.firstChild.id],
-              calling: window.callings[e.item.parentNode.parentNode.children[0].id]
-            };
-            
-            window.staged.push(stage_member);
-          },
-
-          onRemove: function (evt) {
-            console.log('removed', evt);
-            console.warn('this action should be disabled');
+        assigned: { // This is where the entire ward list of names will go. Current names are placeholders.
+          type: Array,
+          value: window.assigned,
+          notify: true,
+        },
+        full_list: {
+          type: Object,
+          value: {}
+        }
+        simple_list: {
+          type: {
+            type: Object,
+            value: {}
           }
-
-        }); // End of Sortable creation
-
-        var full_list_elements = Polymer.dom(e.target.parentNode).querySelectorAll('.full-list-member');
-
-        full_list_elements.forEach(function (element) {
-          if (element.childNodes[0].name !== e.target.parentNode.parentNode.childNodes[1].id) {
-            element.parentNode.removeChild(element); //delete element from DOM if it shouldn't be there.
-          }
-        });
-
-        this.appendedHTML.forEach(function (element) {
-          if (element.childNodes[0].name == e.target.parentNode.parentNode.childNodes[1].id) {
-            e.target.parentNode.appendChild(element); //Add element to DOM if it should be there.
-          } 
-        });
+        }
       },
-
       // Check if we are loading the last list element.
       isEqual: function (v1, v2) {
         // console.log(v1 === v2-1);
         return v1 === (v2-1);
       },
-
-      getClass: function (member) {
-
-        console.log(member);
-        console.log(this.groups);
-
-        if (!member.hasPosition) {
-          return "full-list-member";
-          
-        }
-
-        else {
-          return "brainstorm-member";
-        }
-      },
-
       idChanged: function() {
         var id = this.orgId;
+        this.groups = this.getOrganization(json.callings, id);
+      },
+      ready: function () {
+        console.log('ready')
+        // var elements = Polymer.dom(this.root).querySelector('.full-list');
+        // var elements = Polymer.dom(this.root).querySelectorAll('.full-list');
+        // console.log(elements)
+        // var orgIdString = parseInt(this.orgId);
+        // var name = 'ward' + orgIdString;
+        // console.log("ward list name: ", name)
+        // elements.forEach(function (element) {
+        //   Sortable.create(element, {
+        //     // handle: ".handle", 
+        //     group: {
+        //       name: name, 
+        //       pull: "clone", 
+        //       put: false
+        //     },
+        //     sort: false
+        //   });
+        // });
         
-        if (window.groups == undefined) {
-          window.groups = {};
-        } 
-
-        // If we've already set the window.groups[i] object, get that instead (allows persistent changes).
-        if (window.groups[id] !== undefined) {
-          this.groups = window.groups[id];
-          console.log(window.groups[id]);
-        }
-
-        // Else, get it from the builder function.
-        else {
-          this.groups = this.getOrganization(json.callings, id);
-          window.groups[id] = this.groups;
-        }
       },
-
       arrayChanged: function () {
-
+        console.log('changed called')
+        var simple_list = Polymer.dom(this.root).lastElementChild.children;
+        var orgMembers = [];
+        for(var i = 0; i < simple_list.length; i++) {
+          if (simple_list[i].localName === 'div') {
+            orgMembers.push(simple_list[i].children.org.children[1]);
+          }
+        }
+        var full_list = Polymer.dom(this.root).node.children.drawer.children;
+        console.log(full_list);
+        var wardList = [full_list[2],full_list[4]];
+        console.log("WARD", wardList)
+        var orgIdString = parseInt(this.orgId);
+        var simpleQueryClass = 'simple-list' + orgIdString;
+        var fullQueryClass = 'full-list' + orgIdString;
+        console.log(simpleQueryClass, fullQueryClass)
+        // var orgMembers = Polymer.dom(this.root).querySelectorAll(simpleQueryClass);
+        // var wardList = Polymer.dom(this.root).querySelectorAll(fullQueryClass);
+        console.log(orgMembers, wardList)
+        
+        var wardListName = 'ward' + orgIdString;
+        var orgListName = 'brainstorm' + orgIdString;
+        console.log(orgListName,wardListName)
+        wardList.forEach(function (element) {
+          Sortable.create(element, {
+            // handle: ".handle", 
+            group: {
+              name: wardListName, 
+              pull: "clone", 
+              put: false
+            },
+            sort: false
+          });
+        });
+        console.log("accepted name", wardListName)
+        orgMembers.forEach(function (element) {
+          Sortable.create(element, {
+            handle: ".handle", 
+            group: {
+              name: orgListName,
+              pull: false,
+              put: [wardListName],
+            },
+            filter: ".remove",
+            sort: true,
+            onFilter: function (e) {
+              var release_member = {
+                member: window.people[e.item.firstChild.id],
+                calling: window.callings[e.item.parentNode.parentNode.children[0].id]
+              };
+              window.released.push(release_member);
+              var item = e.item;
+              if (item.parentNode !== null) {
+                item.parentNode.removeChild(item);
+              }
+            },
+            onUpdate: function (evt) {
+              // console.log('updated', evt);
+            },
+            onAdd: function (evt) {
+              var stage_member = {
+                member: window.people[evt.item.firstChild.id],
+                calling: window.callings[evt.item.parentNode.parentNode.children[0].id]
+              };
+              
+              window.staged.push(stage_member)
+            },
+            onRemove: function (evt) {
+              console.log('removed', evt);
+              console.warn('this action should be disabled');
+            }
+          });
+        });
       },
-
       getOrganization : (json, id) => {
         if(json[id].hasRendered) {
           if(json[id].children) {
@@ -370,14 +337,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         else {
           json[id].hasRendered = true;
         }
-
         let callingName = null;
         let callingsInGroupIndex = -1;
  
         if(!id) return null;
         let org = json[id].children;
         // console.log(org)
-
         if (!org) {
           org = json[id];
           this.extractCallingsFromAssignmentsInGroup(null, org);
@@ -390,24 +355,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return pizza;
         }
       },
-
     }); //end polymer declaration
-
     function appendCallingGroupToObject(org) {
       for(let i =0; i < org.length; i++) { //loop through sub-categories of calling-type
         extractCallingsFromAssignmentsInGroup(i,org);
       }
       return org;
     }
-
     function extractCallingsFromAssignmentsInGroup(i, org) {
-
       (i || i === 0) ? current_org = org[i] : current_org = org;
       if (current_org.children) {
         // console.log("found child")
         return appendCallingGroupToObject(current_org);
       }
-
       // console.log('current_org',current_org);
       for(let j = 0; j < current_org.assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
         if(!current_org.callingsInGroup) {
