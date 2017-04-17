@@ -252,11 +252,6 @@
           value: {}
         },
 
-        // activeUser: {
-        //   type: Object,
-        //   observer: 'testUser'
-        // },
-
         unassigned: { // This is where the entire ward list of names will go. Current names are placeholders.
           type: Array,
           value: window.unassigned,
@@ -282,10 +277,7 @@
       },
 
       ready: function () {
-        // var elements = Polymer.dom(this.root).querySelector('.full-list');
         var elements = Polymer.dom(this.root).querySelectorAll('.full-list');
-
-        // console.log(elements);
 
         elements.forEach(function (element) {
 
@@ -305,8 +297,6 @@
       handleSessionResponse: function(event) {
         var response = event.detail.response;
 
-        // console.log(response);
-
         if (response) {
             this.error = '';
 
@@ -315,14 +305,10 @@
                 loggedin: true
             };
         }
-
-        // console.log(this.storedUser);
       },
 
       handleSessionError: function(event) {
           this.error = event.detail.request.xhr.response;
-          // console.log(this.error);
-          // this.storedUser.loggedin = false;
       },
 
       _routePageChanged: function(page) {
@@ -335,8 +321,6 @@
 
       _routeChanged: function(changeRecord) {
         if(changeRecord.value.path && changeRecord.value.path.includes('org')) {
-          // console.log('VALUE:  ', changeRecord.value.path);
-          // console.log(document)
         }
       },
 

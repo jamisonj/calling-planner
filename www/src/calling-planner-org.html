@@ -118,11 +118,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div id="content">
-
-      <!-- <iron-selector selected="{{page}}" attr-for-selected="name" class="drawer-list"> -->
-        <a name="brainstorm" href="/brainstorm/">Back to Organizations</a>
-      <!-- </iron-selector> -->
-
+      <a name="brainstorm" href="/brainstorm/">Back to Organizations</a>
       <template is="dom-repeat" items="{{groups}}">
         <div>
           <h1 id="{{item.orgTypeId}}">{{item.name}}</h1>
@@ -142,8 +138,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
       </template>
     </div>
-
-    <!-- <script src="../bower_components/Sortable/Sortable.js"></script> -->
     
   </template>
 
@@ -183,8 +177,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           filter: ".remove",
           sort: true,
           onFilter: function (e) { // AKA: On removal.
-            
-            console.log(e.item);
 
             var release_member = {
               member: window.people[e.item.firstChild.id],
@@ -195,19 +187,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             // On filter, remove the person from the window.groups object.
             window.groups[orgId].forEach(function(element) {
-              console.log(element);
 
               if (element.orgTypeId == e.item.parentNode.parentNode.parentNode.firstElementChild.id) {
                 
                 element.callingsInGroup.forEach(function(calling) {
-                  // console.log(calling);
 
                   if (calling.callingTypeId == e.item.parentNode.parentNode.children[0].id) {
+                    
                     for (i = 0; i < calling.callingMembers.length; i++) {
-                      console.log(calling.callingMembers[i]);
                       if (calling.callingMembers[i].individualId == e.item.firstChild.id) {
                         calling.callingMembers.splice(i, 1);
-                        console.log(calling.callingMembers[i]);
                       }
                     }
                   }
@@ -225,54 +214,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           },
 
-          onUpdate: function (e) {
-            // console.log('updated', e);
-          },
-
           onAdd: function (e) {
 
             //TODO: On add, add the person to the window.groups object.
-
-            // console.log(window.people[evt.item.firstChild.id].positionTypeId);
-            // console.log(evt.item.parentNode.parentNode.children[0].id);
-
             var member = window.people[e.item.childNodes[0].id];
-
-            // console.log(member);
-
             e.item.childNodes[0].name = e.item.parentNode.parentNode.children[0].id; // Set the name property to equal the new positionID.
-
-            // window.people[evt.item.firstChild.id].positionTypeId = e.item.parentNode.parentNode.children[0].id;
-
-            // On filter, remove the person from the window.groups object.
-            // window.groups[orgId].forEach(function(element) {
-            //   // console.log(element);
-
-            //   if (element.orgTypeId == e.item.parentNode.parentNode.parentNode.firstElementChild.id) {
-                
-            //     element.callingsInGroup.forEach(function(calling) {
-            //       // console.log(calling);
-
-            //       if (calling.callingTypeId == e.item.parentNode.parentNode.children[0].id) {
-            //         // for (i = 0; i < calling.callingMembers.length; i++) {
-            //         //   console.log(calling.callingMembers[i]);
-            //         //   if (calling.callingMembers[i].individualId == e.item.firstChild.id) {
-            //             calling.callingMembers.push(member);
-            //             console.log(calling.callingMembers);
-            //           // }
-            //         // }
-            //       }
-            //       // return calling.callingMembers;
-            //     });
-            //   }
-              
-            //   // return element;
-            // });
-
 
             var new_element = e.item;
             component.push('appendedHTML', new_element);
-            // console.log(appendedHTML);
 
             var stage_member = {
               member: window.people[e.item.firstChild.id],
@@ -281,11 +230,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             
             window.staged.push(stage_member);
           },
-
-          onRemove: function (evt) {
-            console.log('removed', evt);
-            console.warn('this action should be disabled');
-          }
 
         }); // End of Sortable creation
 
@@ -306,18 +250,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       // Check if we are loading the last list element.
       isEqual: function (v1, v2) {
-        // console.log(v1 === v2-1);
         return v1 === (v2-1);
       },
 
       getClass: function (member) {
-
-        // console.log(member);
-        // console.log(this.groups);
-
         if (!member.hasPosition) {
           return "full-list-member";
-          
         }
 
         else {
@@ -335,7 +273,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // If we've already set the window.groups[i] object, get that instead (allows persistent changes).
         if (window.groups[id] !== undefined) {
           this.groups = window.groups[id];
-          console.log(window.groups[id]);
         }
 
         // Else, get it from the builder function.
@@ -367,17 +304,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
  
         if(!id) return null;
         let org = json[id].children;
-        // console.log(org)
 
         if (!org) {
           org = json[id];
           this.extractCallingsFromAssignmentsInGroup(null, org);
-          // console.log(org);
           return [org]
         }
         else {
           let pizza = appendCallingGroupToObject(org);
-          // console.log(pizza);
           return pizza;
         }
       },
@@ -395,11 +329,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       (i || i === 0) ? current_org = org[i] : current_org = org;
       if (current_org.children) {
-        // console.log("found child")
         return appendCallingGroupToObject(current_org);
       }
 
-      // console.log('current_org',current_org);
       for(let j = 0; j < current_org.assignmentsInGroup.length; j++) { //loop through each type of calling in sub-category
         if(!current_org.callingsInGroup) {
           current_org.callingsInGroup = [] //initialize or append to array of calling objects
