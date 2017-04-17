@@ -231,48 +231,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           onAdd: function (e) {
 
-            //TODO: On add, add the person to the window.groups object.
-
-            // console.log(window.people[evt.item.firstChild.id].positionTypeId);
-            // console.log(evt.item.parentNode.parentNode.children[0].id);
-
             var member = window.people[e.item.childNodes[0].id];
 
-            // console.log(member);
 
             e.item.childNodes[0].name = e.item.parentNode.parentNode.children[0].id; // Set the name property to equal the new positionID.
 
-            // window.people[evt.item.firstChild.id].positionTypeId = e.item.parentNode.parentNode.children[0].id;
-
-            // On filter, remove the person from the window.groups object.
-            // window.groups[orgId].forEach(function(element) {
-            //   // console.log(element);
-
-            //   if (element.orgTypeId == e.item.parentNode.parentNode.parentNode.firstElementChild.id) {
-                
-            //     element.callingsInGroup.forEach(function(calling) {
-            //       // console.log(calling);
-
-            //       if (calling.callingTypeId == e.item.parentNode.parentNode.children[0].id) {
-            //         // for (i = 0; i < calling.callingMembers.length; i++) {
-            //         //   console.log(calling.callingMembers[i]);
-            //         //   if (calling.callingMembers[i].individualId == e.item.firstChild.id) {
-            //             calling.callingMembers.push(member);
-            //             console.log(calling.callingMembers);
-            //           // }
-            //         // }
-            //       }
-            //       // return calling.callingMembers;
-            //     });
-            //   }
-              
-            //   // return element;
-            // });
-
-
             var new_element = e.item;
             component.push('appendedHTML', new_element);
-            // console.log(appendedHTML);
 
             var stage_member = {
               member: window.people[e.item.firstChild.id],
@@ -311,9 +276,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       getClass: function (member) {
-
-        // console.log(member);
-        // console.log(this.groups);
 
         if (!member.hasPosition) {
           return "full-list-member";
@@ -425,7 +387,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           current_org.callingsInGroup.push(calling);   //add calling object to array
           callingsInGroupIndex++;
         }
-        // current_org.assignmentsInGroup[j].person = window.people[current_org.assignmentsInGroup[j].individualId].preferredName;
+        
       }
       return null;
     }
