@@ -182,14 +182,14 @@
         <h2>Unassigned Members</h2>
         <ul class="full-list">
           <template is="dom-repeat" items={{unassigned}}>
-            <li class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+            <li id="{{item.individualId}}" class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
           </template>
         </ul>
         <h2>Assigned Members</h2>
         <ul class="full-list">
           <template is="dom-repeat" items={{assigned}}>
             <em>{{item.positionName}}</em>
-            <li class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
+            <li id="{{item.individualId}}" class="full-list-member"><span id="{{item.individualId}}"></span><span class="handle">::</span> {{item.preferredName}} <span class="remove">X</span></li>
           </template>
         </ul>
         <br/><br/><br/><br/>
@@ -296,7 +296,7 @@
               pull: "clone", 
               put: false
             },
-            sort: false
+            sort: true
           });
         });
         

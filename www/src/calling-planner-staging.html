@@ -45,13 +45,16 @@
       },
       attributeChanged: function() {
         //for new callings
-        for(var i =0; i < window.staged.length; i++) {
+        var staged_length = window.staged.length;
+        var released_length = window.released.length;
+
+        for(var i =0; i < staged_length; i++) {
           this.push('changes', window.staged[i])
         }
         window.staged = [];
 
         // for new releases
-        for(var i =0; i < window.released.length; i++) {
+        for(var i =0; i < released_length; i++) {
           this.push('releases', window.released[i])
         }
         window.released = [];
@@ -63,7 +66,7 @@
           calling : e.path[1].children[1].innerHTML,
           status : 'added'
         };
-        window.final.callings.printable.push()
+        window.final.callings.printable.push();
       },
 
       removeCalling: function (e) {
@@ -72,6 +75,7 @@
           calling : undefined,
           status : 'removed'
         };
+        e.target.parentNode.parentNode.remove();
       },
 
       addRelease: function (e) {
@@ -88,6 +92,7 @@
           calling : undefined,
           status : 'removed'
         };
+        e.target.parentNode.parentNode.remove();
       },
       submit: function(e) {
 
