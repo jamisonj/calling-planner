@@ -215,8 +215,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
 
           onAdd: function (e) {
-
-            //TODO: On add, add the person to the window.groups object.
             var member = window.people[e.item.childNodes[0].id];
             e.item.childNodes[0].name = e.item.parentNode.parentNode.children[0].id; // Set the name property to equal the new positionID.
 
@@ -357,7 +355,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           current_org.callingsInGroup.push(calling);   //add calling object to array
           callingsInGroupIndex++;
         }
-        // current_org.assignmentsInGroup[j].person = window.people[current_org.assignmentsInGroup[j].individualId].preferredName;
+        
       }
       return null;
     }
