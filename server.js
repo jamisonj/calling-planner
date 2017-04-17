@@ -9,6 +9,9 @@ const passport            = require('passport');
 const session             = require('express-session');
 const mongoose            = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
+const UserDetails = require('./server/model.users');
+
+mongoose.connect('mongodb://localhost/MyDatabase');
 
 const app = express();
 var data = {};
@@ -54,28 +57,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('www'));
 
-//mongoose user model ---------------------------------------------------------------
-mongoose.Promise = Promise;
-
-mongoose.connect('mongodb://localhost/MyDatabase');
-
-var Schema = mongoose.Schema;
-var UserDetail = new Schema({
-      username: String,
-      password: String
-    }, {
-      collection: 'userInfo'
-    });
-
-UserDetail.plugin(passportLocalMongoose);
-
-var UserDetails = mongoose.model('userInfo', UserDetail);
-
 //routes -------------------------------------------------------------------------
 
 app.use('/api', bodyParser.json());
-// app.use('/api/tasks', taskRoute);
-// app.use('/api/people', peopleRoutes);
 
 // Our API can only be hit if the user is authenticated.
 app.get('/api/*', function(req, res) {
@@ -84,28 +68,6 @@ app.get('/api/*', function(req, res) {
     if (!req.user) return res.sendStatus(401);
     res.send(data[req.user.username]);
 });
-
-// This page can only be hit if the user is authenticated.
-// app.get('/brainstorm', function(req, res) {
-//     if (!req.user) return res.sendStatus(401);
-//     res.sendFile('www/index.html', {root: '.'});
-// });
-
-// // This page can only be hit if the user is authenticated.
-// app.get('/staging', function(req, res) {
-//     if (!req.user) return res.sendStatus(401);
-//     res.sendFile('www/index.html', {root: '.'});
-// });
-
-// // This page can only be hit if the user is authenticated.
-// app.get('/final', function(req, res) {
-//     if (!req.user) return res.sendStatus(401);
-//     res.sendFile('www/index.html', {root: '.'});
-// });
-
-// app.get('/login', function(req, res) {
-//     res.sendFile('www/index.html', {root: '.'});
-// });
 
 app.get('/register', function(req, res) {
     res.sendFile('www/index.html', {root: '.'});
