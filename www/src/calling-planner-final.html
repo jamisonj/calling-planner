@@ -16,7 +16,7 @@
     <!-- Allows us to share this data with this custom element. -->
     <!-- <app-data key="userData" data="{{storedUser}}"></app-data> -->
 
-    <div class="card">
+    <div class="card" id="printable">
       <h1>Calling Changes</h1> <paper-button raised on-tap="submit">Print</paper-button>
       <h3>Calls</h3>
       <ul>
@@ -78,6 +78,24 @@
           }
         }
       },
+
+      submit : function () {
+        var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+        mywindow.document.write('<html><head><title>Callings</title>');
+        mywindow.document.write('</head><body >');
+        var calls = Polymer.dom(this.root).node.lastElementChild.children;
+        mywindow.document.write(Polymer.dom(this.root).node.lastElementChild.innerHTML);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+      }
     });
   </script>
 </dom-module>
